@@ -30,15 +30,8 @@ public class GetTest extends AbstractTest {
   @Test
   public void get() {
     server.configure(routes -> routes
-        .get("/", "hello")
+        .get("/", "hello World")
     );
-
-    get("/").should()
-      .respond(200)
-      .respond("hello")
-      .respond("text/html;charset=UTF-8", "hello")
-      .respond(200, "hello")
-      .respond(200, "text/html;charset=UTF-8", "hello");
 
     get("/").should()
       .respond(200)
@@ -55,7 +48,7 @@ public class GetTest extends AbstractTest {
     );
 
     thrown.expect(AssertionError.class);
-    thrown.expectMessage("Expecting \"good bye\" was \"hello\"");
+    thrown.expectMessage("Expecting \"hello\" to contain \"good bye\"");
 
     get("/").should().respond("good bye");
   }
@@ -108,7 +101,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("Hello").withCookie("name", "value"))
     );
 
-    get("/").should().respondWithCookie("name", "value");
+    get("/").should().haveCookie("name", "value");
   }
 
   @Test
@@ -117,7 +110,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withCookie("first", "1st").withCookie("second", "2nd"))
     );
 
-    get("/").should().respondWithCookie("first", "1st").respondWithCookie("second", "2nd");
+    get("/").should().haveCookie("first", "1st").haveCookie("second", "2nd");
   }
 
   @Test
@@ -128,7 +121,7 @@ public class GetTest extends AbstractTest {
 
     thrown.expect(AssertionError.class);
 
-    get("/").should().respondWithCookie("??", "??");
+    get("/").should().haveCookie("??", "??");
   }
 
   @Test
@@ -139,7 +132,7 @@ public class GetTest extends AbstractTest {
 
     thrown.expect(AssertionError.class);
 
-    get("/").should().respondWithCookie("name", "??");
+    get("/").should().haveCookie("name", "??");
   }
 
   @Test
@@ -148,7 +141,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withHeader("name", "value"))
     );
 
-    get("/").should().respondWithHeader("name", "value");
+    get("/").should().haveHeader("name", "value");
   }
 
   @Test
@@ -157,7 +150,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withHeader("name", "value"))
     );
 
-    get("/").should().respondWithHeader("name", "value");
+    get("/").should().haveHeader("name", "value");
   }
 
   @Test
@@ -166,6 +159,6 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withHeader("name", "value"))
     );
 
-    get("/").should().respondWithHeader("name", "value");
+    get("/").should().haveHeader("name", "value");
   }
 }

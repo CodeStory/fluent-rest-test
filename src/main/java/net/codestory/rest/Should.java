@@ -29,11 +29,11 @@ public class Should {
   }
 
   public Should respond(String content) {
-    return assertEquals(content, response.bodyAsString());
+    return assertContains(content, response.bodyAsString());
   }
 
   public Should respondWithContentType(String contentType) {
-    return assertEquals(contentType, response.contentType());
+    return assertContains(contentType, response.contentType());
   }
 
   public Should respond(String contentType, String content) {
@@ -48,11 +48,11 @@ public class Should {
     return respond(statusCode).respond(contentType, content);
   }
 
-  public Should respondWithCookie(String name, String value) {
+  public Should haveCookie(String name, String value) {
     return assertEquals(value, response.cookie(name));
   }
 
-  public Should respondWithHeader(String name, String value) {
+  public Should haveHeader(String name, String value) {
     return assertEquals(value, response.header(name));
   }
 
@@ -60,6 +60,13 @@ public class Should {
   private Should assertEquals(Object expectedValue, Object actualValue) {
     if (!Objects.equals(expectedValue, actualValue)) {
       throw new AssertionError(String.format("Expecting \"%s\" was \"%s\"", expectedValue, actualValue));
+    }
+    return this;
+  }
+
+  private Should assertContains(String expectedValue, String actualValue) {
+    if (!actualValue.contains(expectedValue)) {
+      throw new AssertionError(String.format("Expecting \"%s\" to contain \"%s\"", actualValue, expectedValue));
     }
     return this;
   }
