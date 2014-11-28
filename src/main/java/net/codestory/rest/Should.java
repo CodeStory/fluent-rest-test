@@ -25,34 +25,34 @@ public class Should {
   }
 
   public Should respond(int statusCode) {
-    return assertEquals(statusCode, response.code());
+    return assertEquals(response.code(), statusCode);
   }
 
   public Should contain(String content) {
-    return assertContains(content, response.bodyAsString());
+    return assertContains(response.bodyAsString(), content);
   }
 
   public Should haveType(String contentType) {
-    return assertContains(contentType, response.contentType());
+    return assertContains(response.contentType(), contentType);
   }
 
   public Should haveCookie(String name, String value) {
-    return assertEquals(value, response.cookie(name));
+    return assertEquals(response.cookie(name), value);
   }
 
   public Should haveHeader(String name, String value) {
-    return assertEquals(value, response.header(name));
+    return assertEquals(response.header(name), value);
   }
 
   // Verifications
-  private Should assertEquals(Object expectedValue, Object actualValue) {
+  private Should assertEquals(Object actualValue, Object expectedValue) {
     if (!Objects.equals(expectedValue, actualValue)) {
       throw new AssertionError(String.format("Expecting \"%s\" was \"%s\"", expectedValue, actualValue));
     }
     return this;
   }
 
-  private Should assertContains(String expectedValue, String actualValue) {
+  private Should assertContains(String actualValue, String expectedValue) {
     if (!actualValue.contains(expectedValue)) {
       throw new AssertionError(String.format("Expecting \"%s\" to contain \"%s\"", actualValue, expectedValue));
     }
