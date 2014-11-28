@@ -36,26 +36,15 @@ public class RestAssert {
   }
 
   public RestAssert produces(int statusCode) {
-    if (response.code() != statusCode) {
-      throw new AssertionError(response.code());
-    }
-    return this;
+    return assertEquals(statusCode, response.code());
   }
 
   public RestAssert produces(String content) {
-    String actualContent = response.bodyAsString();
-    if (!Objects.equals(actualContent, content)) {
-      throw new AssertionError(actualContent);
-    }
-    return this;
+    return assertEquals(content, response.bodyAsString());
   }
 
   private RestAssert producesContentType(String contentType) {
-    String actualContentType = response.contentType();
-    if (!Objects.equals(actualContentType, contentType)) {
-      throw new AssertionError(actualContentType);
-    }
-    return this;
+    return assertEquals(contentType, response.contentType());
   }
 
   public RestAssert produces(String contentType, String content) {
@@ -68,5 +57,13 @@ public class RestAssert {
 
   public RestAssert produces(int statusCode, String contentType, String content) {
     return produces(statusCode).produces(contentType, content);
+  }
+
+  // Verifications
+  private RestAssert assertEquals(Object expectedValue, Object actualValue) {
+    if (!Objects.equals(expectedValue, actualValue)) {
+      throw new AssertionError(actualValue);
+    }
+    return this;
   }
 }
