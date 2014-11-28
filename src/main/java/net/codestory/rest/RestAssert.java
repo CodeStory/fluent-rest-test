@@ -29,8 +29,6 @@ public class RestAssert {
   private final Function<OkHttpClient, OkHttpClient> configureClient;
   private final Function<Request.Builder, Request.Builder> configureRequest;
 
-  private RestResponse response;
-
   RestAssert(String url) {
     this(url, identity(), identity());
   }
