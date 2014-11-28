@@ -40,7 +40,7 @@ public class GetTest extends AbstractTest {
     server.configure(routes -> routes.get("/", "hello"));
 
     thrown.expect(AssertionError.class);
-    thrown.expectMessage("hello");
+    thrown.expectMessage("Expecting \"good bye\" was \"hello\"");
 
     get("/").produces("good bye");
   }

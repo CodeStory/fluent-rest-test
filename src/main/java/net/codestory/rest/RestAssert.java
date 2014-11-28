@@ -62,7 +62,7 @@ public class RestAssert {
   // Verifications
   private RestAssert assertEquals(Object expectedValue, Object actualValue) {
     if (!Objects.equals(expectedValue, actualValue)) {
-      throw new AssertionError(actualValue);
+      throw new AssertionError(String.format("Expecting \"%s\" was \"%s\"", expectedValue, actualValue));
     }
     return this;
   }
