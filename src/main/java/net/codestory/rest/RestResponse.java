@@ -78,4 +78,8 @@ class RestResponse {
     List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
     return cookies.stream().filter(cookie -> cookie.getName().equals(name)).findFirst().map(cookie -> cookie.getValue()).orElse(null);
   }
+
+  public String getHeader(String name) {
+    return response.header(name);
+  }
 }

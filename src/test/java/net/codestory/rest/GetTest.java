@@ -107,7 +107,7 @@ public class GetTest extends AbstractTest {
   @Test
   public void get_cookies() {
     server.configure(routes -> routes
-        .get("/", context -> new Payload("Hello").withCookie("first", "1st").withCookie("second", "2nd"))
+        .get("/", context -> new Payload("").withCookie("first", "1st").withCookie("second", "2nd"))
     );
 
     get("/").producesCookie("first", "1st").producesCookie("second", "2nd");
@@ -116,7 +116,7 @@ public class GetTest extends AbstractTest {
   @Test
   public void fail_without_cookie() {
     server.configure(routes -> routes
-        .get("/", context -> "Hello")
+        .get("/", context -> "")
     );
 
     thrown.expect(AssertionError.class);
@@ -127,11 +127,38 @@ public class GetTest extends AbstractTest {
   @Test
   public void fail_with_wrong_cookie() {
     server.configure(routes -> routes
-        .get("/", context -> new Payload("Hello").withCookie("name", "value"))
+        .get("/", context -> new Payload("").withCookie("name", "value"))
     );
 
     thrown.expect(AssertionError.class);
 
     get("/").producesCookie("name", "??");
+  }
+
+  @Test
+  public void get_header() {
+    server.configure(routes -> routes
+        .get("/", context -> new Payload("").withHeader("name", "value"))
+    );
+
+    get("/").producesHeader("name", "value");
+  }
+
+  @Test
+  public void fail_without_header() {
+    server.configure(routes -> routes
+        .get("/", context -> new Payload("").withHeader("name", "value"))
+    );
+
+    get("/").producesHeader("name", "value");
+  }
+
+  @Test
+  public void fail_with_wrong_header() {
+    server.configure(routes -> routes
+        .get("/", context -> new Payload("").withHeader("name", "value"))
+    );
+
+    get("/").producesHeader("name", "value");
   }
 }

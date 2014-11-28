@@ -108,6 +108,10 @@ public class RestAssert {
     return assertEquals(value, response().getCookie(name));
   }
 
+  public RestAssert producesHeader(String name, String value) {
+    return assertEquals(value, response().getHeader(name));
+  }
+
   private RestResponse response() {
     if (response == null) {
       response = RestResponse.call(url, configureClient, configureRequest);
