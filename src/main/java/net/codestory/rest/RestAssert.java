@@ -104,6 +104,10 @@ public class RestAssert {
     return produces(statusCode).produces(contentType, content);
   }
 
+  public RestAssert producesCookie(String name, String value) {
+    return assertEquals(value, response().getCookie(name));
+  }
+
   private RestResponse response() {
     if (response == null) {
       response = RestResponse.call(url, configureClient, configureRequest);

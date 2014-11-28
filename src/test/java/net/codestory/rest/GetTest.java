@@ -16,6 +16,7 @@
 package net.codestory.rest;
 
 import net.codestory.http.filters.basic.BasicAuthFilter;
+import net.codestory.http.payload.Payload;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -92,5 +93,45 @@ public class GetTest extends AbstractTest {
     get("/").withAuthentication("login", "pwd").produces("Secret");
     get("/").withAuthentication("", "").produces(401);
     get("/").produces(401);
+  }
+
+  @Test
+  public void get_cookie() {
+    server.configure(routes -> routes
+        .get("/", context -> new Payload("Hello").withCookie("name", "value"))
+    );
+
+    get("/").producesCookie("name", "value");
+  }
+
+  @Test
+  public void get_cookies() {
+    server.configure(routes -> routes
+        .get("/", context -> new Payload("Hello").withCookie("first", "1st").withCookie("second", "2nd"))
+    );
+
+    get("/").producesCookie("first", "1st").producesCookie("second", "2nd");
+  }
+
+  @Test
+  public void fail_without_cookie() {
+    server.configure(routes -> routes
+        .get("/", context -> "Hello")
+    );
+
+    thrown.expect(AssertionError.class);
+
+    get("/").producesCookie("??", "??");
+  }
+
+  @Test
+  public void fail_with_wrong_cookie() {
+    server.configure(routes -> routes
+        .get("/", context -> new Payload("Hello").withCookie("name", "value"))
+    );
+
+    thrown.expect(AssertionError.class);
+
+    get("/").producesCookie("name", "??");
   }
 }
