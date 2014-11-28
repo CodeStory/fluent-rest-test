@@ -26,7 +26,7 @@ public class HeadTest extends AbstractTest {
         .head("/head", Payload.ok())
     );
 
-    head("/get").produces(200).produces("");
-    head("/head").produces(200).produces("");
+    head("/get").should().respond(200).respond("");
+    head("/head").should().respond(200).respond("");
   }
 }

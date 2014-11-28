@@ -19,7 +19,6 @@ import com.squareup.okhttp.*;
 
 import java.io.IOException;
 import java.net.Proxy;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -75,55 +74,16 @@ public class RestAssert {
     return new RestAssert(url, configureClient, configureRequest.andThen(configure));
   }
 
-  private RestAssert withClient(Function<OkHttpClient, OkHttpClient> configure) {
+  RestAssert withClient(Function<OkHttpClient, OkHttpClient> configure) {
     return new RestAssert(url, configureClient.andThen(configure), configureRequest);
   }
 
   // Assertions
-  public RestAssert produces(int statusCode) {
-    return assertEquals(statusCode, response().code());
-  }
-
-  public RestAssert produces(String content) {
-    return assertEquals(content, response().bodyAsString());
-  }
-
-  private RestAssert producesContentType(String contentType) {
-    return assertEquals(contentType, response().contentType());
-  }
-
-  public RestAssert produces(String contentType, String content) {
-    return producesContentType(contentType).produces(content);
-  }
-
-  public RestAssert produces(int statusCode, String content) {
-    return produces(statusCode).produces(content);
-  }
-
-  public RestAssert produces(int statusCode, String contentType, String content) {
-    return produces(statusCode).produces(contentType, content);
-  }
-
-  public RestAssert producesCookie(String name, String value) {
-    return assertEquals(value, response().cookie(name));
-  }
-
-  public RestAssert producesHeader(String name, String value) {
-    return assertEquals(value, response().header(name));
-  }
-
-  private RestResponse response() {
-    if (response == null) {
-      response = RestResponse.call(url, configureClient, configureRequest);
+  public Should should() {
+    try {
+      return new Should(RestResponse.call(url, configureClient, configureRequest));
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to query: " + url, e);
     }
-    return response;
-  }
-
-  // Verifications
-  private RestAssert assertEquals(Object expectedValue, Object actualValue) {
-    if (!Objects.equals(expectedValue, actualValue)) {
-      throw new AssertionError(String.format("Expecting \"%s\" was \"%s\"", expectedValue, actualValue));
-    }
-    return this;
   }
 }

@@ -25,10 +25,10 @@ public class PostTest extends AbstractTest {
         .post("/", () -> Payload.created())
     );
 
-    post("/")
-      .produces(201)
-      .produces("")
-      .produces(201, "");
+    post("/").should()
+      .respond(201)
+      .respond("")
+      .respond(201, "");
   }
 
   @Test
@@ -37,12 +37,12 @@ public class PostTest extends AbstractTest {
         .post("/", context -> new Payload("text/plain", context.contentAsString(), 201))
     );
 
-    post("/", "<body>")
-      .produces(201)
-      .produces("<body>")
-      .produces("text/plain", "<body>")
-      .produces(201, "<body>")
-      .produces(201, "text/plain", "<body>");
+    post("/", "<body>").should()
+      .respond(201)
+      .respond("<body>")
+      .respond("text/plain", "<body>")
+      .respond(201, "<body>")
+      .respond(201, "text/plain", "<body>");
   }
 
   @Test
@@ -51,11 +51,11 @@ public class PostTest extends AbstractTest {
         .post("/", context -> new Payload("text/plain", context.get("key1") + "&" + context.get("key2"), 201))
     );
 
-    post("/", "key1", "1st", "key2", "2nd")
-      .produces(201)
-      .produces("1st&2nd")
-      .produces("text/plain", "1st&2nd")
-      .produces(201, "1st&2nd")
-      .produces(201, "text/plain", "1st&2nd");
+    post("/", "key1", "1st", "key2", "2nd").should()
+      .respond(201)
+      .respond("1st&2nd")
+      .respond("text/plain", "1st&2nd")
+      .respond(201, "1st&2nd")
+      .respond(201, "text/plain", "1st&2nd");
   }
 }

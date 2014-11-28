@@ -25,6 +25,6 @@ public class DeleteTest extends AbstractTest {
         .delete("/", () -> Payload.ok())
     );
 
-    delete("/").produces(200);
+    delete("/").should().respond(200);
   }
 }

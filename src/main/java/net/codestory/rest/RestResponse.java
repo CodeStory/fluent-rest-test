@@ -38,20 +38,16 @@ class RestResponse {
     this.response = response;
   }
 
-  static RestResponse call(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
-    try {
-      CookieManager cookieManager = new CookieManager();
-      cookieManager.setCookiePolicy(ACCEPT_ALL);
+  static RestResponse call(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) throws IOException {
+    CookieManager cookieManager = new CookieManager();
+    cookieManager.setCookiePolicy(ACCEPT_ALL);
 
-      Request.Builder request = configureRequest.apply(new Request.Builder().url(url));
-      OkHttpClient client = configureClient.apply(new OkHttpClient().setCookieHandler(cookieManager));
+    Request.Builder request = configureRequest.apply(new Request.Builder().url(url));
+    OkHttpClient client = configureClient.apply(new OkHttpClient().setCookieHandler(cookieManager));
 
-      Response response = client.newCall(request.build()).execute();
+    Response response = client.newCall(request.build()).execute();
 
-      return new RestResponse(cookieManager, response);
-    } catch (IOException e) {
-      throw new RuntimeException("Unable to query: " + url, e);
-    }
+    return new RestResponse(cookieManager, response);
   }
 
   public int code() {
