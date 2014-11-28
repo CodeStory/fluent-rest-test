@@ -4,7 +4,7 @@
 
   <groupId>net.code-story</groupId>
   <artifactId>fluent-rest-test</artifactId>
-  <version>2.31-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Fluent-Rest-Test</name>
