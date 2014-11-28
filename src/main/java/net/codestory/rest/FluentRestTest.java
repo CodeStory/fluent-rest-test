@@ -18,8 +18,12 @@ package net.codestory.rest;
 public interface FluentRestTest {
   int port();
 
+  default String baseUrl() {
+    return "http://localhost:" + port();
+  }
+
   // GET
   default RestAssert get(String path) {
-    return new RestAssert("http://localhost:" + port() + path);
+    return new RestAssert(baseUrl() + path);
   }
 }
