@@ -24,6 +24,6 @@ public class OptionsTest extends AbstractTest {
         .options("/", "Hello")
     );
 
-    options("/").should().respond(200).respond("Hello");
+    options("/").should().respond(200).contain("Hello");
   }
 }

@@ -27,8 +27,7 @@ public class PostTest extends AbstractTest {
 
     post("/").should()
       .respond(201)
-      .respond("")
-      .respond(201, "");
+      .contain("");
   }
 
   @Test
@@ -37,12 +36,7 @@ public class PostTest extends AbstractTest {
         .post("/", context -> new Payload("text/plain", context.contentAsString(), 201))
     );
 
-    post("/", "<body>").should()
-      .respond(201)
-      .respond("<body>")
-      .respond("text/plain", "<body>")
-      .respond(201, "<body>")
-      .respond(201, "text/plain", "<body>");
+    post("/", "<body>").should().respond(201).contain("<body>");
   }
 
   @Test
@@ -51,11 +45,6 @@ public class PostTest extends AbstractTest {
         .post("/", context -> new Payload("text/plain", context.get("key1") + "&" + context.get("key2"), 201))
     );
 
-    post("/", "key1", "1st", "key2", "2nd").should()
-      .respond(201)
-      .respond("1st&2nd")
-      .respond("text/plain", "1st&2nd")
-      .respond(201, "1st&2nd")
-      .respond(201, "text/plain", "1st&2nd");
+    post("/", "key1", "1st", "key2", "2nd").should().respond(201).contain("1st&2nd");
   }
 }

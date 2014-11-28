@@ -33,12 +33,7 @@ public class GetTest extends AbstractTest {
         .get("/", "hello World")
     );
 
-    get("/").should()
-      .respond(200)
-      .respond("hello")
-      .respond("text/html;charset=UTF-8", "hello")
-      .respond(200, "hello")
-      .respond(200, "text/html;charset=UTF-8", "hello");
+    get("/").should().respond(200).haveType("text/html").contain("hello");
   }
 
   @Test
@@ -50,7 +45,7 @@ public class GetTest extends AbstractTest {
     thrown.expect(AssertionError.class);
     thrown.expectMessage("Expecting \"hello\" to contain \"good bye\"");
 
-    get("/").should().respond("good bye");
+    get("/").should().contain("good bye");
   }
 
   @Test
@@ -59,7 +54,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> context.header("name"))
     );
 
-    get("/").withHeader("name", "value").should().respond("value");
+    get("/").withHeader("name", "value").should().contain("value");
   }
 
   @Test
@@ -68,7 +63,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> context.header("first") + context.header("second"))
     );
 
-    get("/").withHeader("first", "1").withHeader("second", "2").should().respond("12");
+    get("/").withHeader("first", "1").withHeader("second", "2").should().contain("12");
   }
 
   @Test
@@ -78,7 +73,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> "Secret")
     );
 
-    get("/").withPreemptiveAuthentication("login", "pwd").should().respond("Secret");
+    get("/").withPreemptiveAuthentication("login", "pwd").should().contain("Secret");
     get("/").withPreemptiveAuthentication("", "").should().respond(401);
     get("/").should().respond(401);
   }
@@ -90,7 +85,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> "Secret")
     );
 
-    get("/").withAuthentication("login", "pwd").should().respond("Secret");
+    get("/").withAuthentication("login", "pwd").should().contain("Secret");
     get("/").withAuthentication("", "").should().respond(401);
     get("/").should().respond(401);
   }

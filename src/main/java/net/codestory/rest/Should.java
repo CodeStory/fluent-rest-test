@@ -28,24 +28,12 @@ public class Should {
     return assertEquals(statusCode, response.code());
   }
 
-  public Should respond(String content) {
+  public Should contain(String content) {
     return assertContains(content, response.bodyAsString());
   }
 
-  public Should respondWithContentType(String contentType) {
+  public Should haveType(String contentType) {
     return assertContains(contentType, response.contentType());
-  }
-
-  public Should respond(String contentType, String content) {
-    return respondWithContentType(contentType).respond(content);
-  }
-
-  public Should respond(int statusCode, String content) {
-    return respond(statusCode).respond(content);
-  }
-
-  public Should respond(int statusCode, String contentType, String content) {
-    return respond(statusCode).respond(contentType, content);
   }
 
   public Should haveCookie(String name, String value) {
