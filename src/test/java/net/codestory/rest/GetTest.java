@@ -15,6 +15,8 @@
  */
 package net.codestory.rest;
 
+import net.codestory.http.filters.basic.BasicAuthFilter;
+import net.codestory.http.security.Users;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -57,5 +59,16 @@ public class GetTest extends AbstractTest {
     server.configure(routes -> routes.get("/", context -> context.header("first") + context.header("second")));
 
     get("/").withHeader("first", "1").withHeader("second", "2").produces("12");
+  }
+
+  @Test
+  public void get_with_preemptive_authentication() {
+    server.configure(routes -> routes
+        .filter(new BasicAuthFilter("/", "realm", Users.singleUser("login", "pwd")))
+        .get("/", context -> "Secret")
+    );
+
+    get("/").withPreemptiveAuthentication("login", "pwd").produces("Secret");
+    get("/").withPreemptiveAuthentication("", "").produces(401);
   }
 }

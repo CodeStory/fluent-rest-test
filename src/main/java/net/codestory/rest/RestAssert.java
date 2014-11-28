@@ -15,6 +15,7 @@
  */
 package net.codestory.rest;
 
+import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.Request;
 
 import java.util.Objects;
@@ -41,6 +42,10 @@ public class RestAssert {
   // Configuration
   public RestAssert withHeader(String name, String value) {
     return new RestAssert(url, configureRequest.andThen(request -> request.addHeader(name, value)));
+  }
+
+  public RestAssert withPreemptiveAuthentication(String login, String password) {
+    return withHeader("Authorization", Credentials.basic(login, password));
   }
 
   // Assertions
