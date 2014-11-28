@@ -19,6 +19,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class RestAssert {
   private final RestResponse response;
@@ -43,30 +44,29 @@ public class RestAssert {
 
   public RestAssert produces(String content) {
     String actualContent = response.bodyAsString();
-    if (!actualContent.equals(content)) {
+    if (!Objects.equals(actualContent, content)) {
       throw new AssertionError(actualContent);
     }
     return this;
   }
 
-  public RestAssert produces(String contentType, String content) {
+  private RestAssert producesContentType(String contentType) {
     String actualContentType = response.contentType();
-    if (!actualContentType.equals(contentType)) {
+    if (!Objects.equals(actualContentType, contentType)) {
       throw new AssertionError(actualContentType);
     }
-    produces(content);
     return this;
+  }
+
+  public RestAssert produces(String contentType, String content) {
+    return producesContentType(contentType).produces(content);
   }
 
   public RestAssert produces(int statusCode, String content) {
-    produces(statusCode);
-    produces(content);
-    return this;
+    return produces(statusCode).produces(content);
   }
 
   public RestAssert produces(int statusCode, String contentType, String content) {
-    produces(statusCode);
-    produces(contentType, content);
-    return this;
+    return produces(statusCode).produces(contentType, content);
   }
 }
