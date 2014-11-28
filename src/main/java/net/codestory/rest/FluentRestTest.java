@@ -32,6 +32,10 @@ public interface FluentRestTest {
     return get(path).withRequest(request -> request.delete());
   }
 
+  default RestAssert head(String path) {
+    return get(path).withRequest(request -> request.head());
+  }
+
   default RestAssert post(String path) {
     return get(path).withRequest(request -> request.post(PostBody.none()));
   }
