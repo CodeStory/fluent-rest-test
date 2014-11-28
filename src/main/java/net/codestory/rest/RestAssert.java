@@ -20,16 +20,19 @@ import com.squareup.okhttp.Request;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class RestAssert {
   private final RestResponse response;
 
-  RestAssert(String url) {
-    Request request = new Request.Builder().url(url).build();
+  RestAssert(String url, Function<Request.Builder, Request.Builder> configRequest) {
+    Request.Builder request = new Request.Builder().url(url);
+    request = configRequest.apply(request);
+
     OkHttpClient client = new OkHttpClient();
 
     try {
-      response = new RestResponse(client.newCall(request).execute());
+      response = new RestResponse(client.newCall(request.build()).execute());
     } catch (IOException e) {
       throw new RuntimeException("Unable to query: " + url, e);
     }
