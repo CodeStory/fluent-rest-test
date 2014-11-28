@@ -105,11 +105,11 @@ public class RestAssert {
   }
 
   public RestAssert producesCookie(String name, String value) {
-    return assertEquals(value, response().getCookie(name));
+    return assertEquals(value, response().cookie(name));
   }
 
   public RestAssert producesHeader(String name, String value) {
-    return assertEquals(value, response().getHeader(name));
+    return assertEquals(value, response().header(name));
   }
 
   private RestResponse response() {

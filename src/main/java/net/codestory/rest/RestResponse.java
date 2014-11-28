@@ -38,7 +38,7 @@ class RestResponse {
     this.response = response;
   }
 
-  public static RestResponse call(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
+  static RestResponse call(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
     try {
       CookieManager cookieManager = new CookieManager();
       cookieManager.setCookiePolicy(ACCEPT_ALL);
@@ -71,15 +71,15 @@ class RestResponse {
   }
 
   public String contentType() {
-    return response.header("Content-Type");
+    return header("Content-Type");
   }
 
-  public String getCookie(String name) {
+  public String header(String name) {
+    return response.header(name);
+  }
+
+  public String cookie(String name) {
     List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
     return cookies.stream().filter(cookie -> cookie.getName().equals(name)).findFirst().map(cookie -> cookie.getValue()).orElse(null);
-  }
-
-  public String getHeader(String name) {
-    return response.header(name);
   }
 }
