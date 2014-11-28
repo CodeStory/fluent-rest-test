@@ -26,8 +26,4 @@ public interface FluentRestTest {
   default RestAssert get(String path) {
     return new RestAssert(baseUrl() + path, request -> request);
   }
-
-  default RestAssert getWithHeader(String path, String name, String value) {
-    return new RestAssert(baseUrl() + path, request -> request.addHeader(name, value));
-  }
 }

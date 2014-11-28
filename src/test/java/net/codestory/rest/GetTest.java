@@ -49,6 +49,6 @@ public class GetTest extends AbstractTest {
   public void get_with_header() {
     server.configure(routes -> routes.get("/", context -> context.header("name")));
 
-    getWithHeader("/", "name", "value").produces("value");
+    get("/").withHeader("name", "value").produces("value");
   }
 }

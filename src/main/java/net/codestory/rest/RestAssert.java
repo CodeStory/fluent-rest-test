@@ -23,31 +23,49 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class RestAssert {
-  private final RestResponse response;
+  private final String url;
+  private final Function<Request.Builder, Request.Builder> configureRequest;
 
-  RestAssert(String url, Function<Request.Builder, Request.Builder> configRequest) {
-    Request.Builder request = new Request.Builder().url(url);
-    request = configRequest.apply(request);
+  private RestResponse response;
 
-    OkHttpClient client = new OkHttpClient();
-
-    try {
-      response = new RestResponse(client.newCall(request.build()).execute());
-    } catch (IOException e) {
-      throw new RuntimeException("Unable to query: " + url, e);
-    }
+  RestAssert(String url, Function<Request.Builder, Request.Builder> configureRequest) {
+    this.url = url;
+    this.configureRequest = configureRequest;
   }
 
+  private RestResponse response() {
+    if (response == null) {
+      Request.Builder request = new Request.Builder().url(url);
+      request = configureRequest.apply(request);
+
+      OkHttpClient client = new OkHttpClient();
+
+      try {
+        response = new RestResponse(client.newCall(request.build()).execute());
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to query: " + url, e);
+      }
+    }
+
+    return response;
+  }
+
+  // Configuration
+  public RestAssert withHeader(String name, String value) {
+    return new RestAssert(url, configureRequest.andThen(request -> request.addHeader(name, value)));
+  }
+
+  // Assertions
   public RestAssert produces(int statusCode) {
-    return assertEquals(statusCode, response.code());
+    return assertEquals(statusCode, response().code());
   }
 
   public RestAssert produces(String content) {
-    return assertEquals(content, response.bodyAsString());
+    return assertEquals(content, response().bodyAsString());
   }
 
   private RestAssert producesContentType(String contentType) {
-    return assertEquals(contentType, response.contentType());
+    return assertEquals(contentType, response().contentType());
   }
 
   public RestAssert produces(String contentType, String content) {
