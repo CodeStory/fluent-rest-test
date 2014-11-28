@@ -16,10 +16,11 @@
 package net.codestory.rest;
 
 import net.codestory.http.filters.basic.BasicAuthFilter;
-import net.codestory.http.security.Users;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static net.codestory.http.security.Users.singleUser;
 
 public class GetTest extends AbstractTest {
   @Rule
@@ -27,7 +28,9 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get() {
-    server.configure(routes -> routes.get("/", "hello"));
+    server.configure(routes -> routes
+        .get("/", "hello")
+    );
 
     get("/")
       .produces(200)
@@ -39,7 +42,9 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void fail_to_get() {
-    server.configure(routes -> routes.get("/", "hello"));
+    server.configure(routes -> routes
+        .get("/", "hello")
+    );
 
     thrown.expect(AssertionError.class);
     thrown.expectMessage("Expecting \"good bye\" was \"hello\"");
@@ -49,14 +54,18 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get_with_header() {
-    server.configure(routes -> routes.get("/", context -> context.header("name")));
+    server.configure(routes -> routes
+        .get("/", context -> context.header("name"))
+    );
 
     get("/").withHeader("name", "value").produces("value");
   }
 
   @Test
   public void get_with_headers() {
-    server.configure(routes -> routes.get("/", context -> context.header("first") + context.header("second")));
+    server.configure(routes -> routes
+        .get("/", context -> context.header("first") + context.header("second"))
+    );
 
     get("/").withHeader("first", "1").withHeader("second", "2").produces("12");
   }
@@ -64,11 +73,24 @@ public class GetTest extends AbstractTest {
   @Test
   public void get_with_preemptive_authentication() {
     server.configure(routes -> routes
-        .filter(new BasicAuthFilter("/", "realm", Users.singleUser("login", "pwd")))
+        .filter(new BasicAuthFilter("/", "realm", singleUser("login", "pwd")))
         .get("/", context -> "Secret")
     );
 
     get("/").withPreemptiveAuthentication("login", "pwd").produces("Secret");
     get("/").withPreemptiveAuthentication("", "").produces(401);
+    get("/").produces(401);
+  }
+
+  @Test
+  public void get_with_basic_authentication() {
+    server.configure(routes -> routes
+        .filter(new BasicAuthFilter("/", "realm", singleUser("login", "pwd")))
+        .get("/", context -> "Secret")
+    );
+
+    get("/").withAuthentication("login", "pwd").produces("Secret");
+    get("/").withAuthentication("", "").produces(401);
+    get("/").produces(401);
   }
 }

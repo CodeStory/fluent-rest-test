@@ -15,37 +15,67 @@
  */
 package net.codestory.rest;
 
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.Request;
+import com.squareup.okhttp.*;
 
+import java.io.IOException;
+import java.net.Proxy;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+
+import static java.util.function.Function.identity;
 
 public class RestAssert {
   private final String url;
+  private final Function<OkHttpClient, OkHttpClient> configureClient;
   private final Function<Request.Builder, Request.Builder> configureRequest;
 
   private RestResponse response;
 
-  RestAssert(String url, Function<Request.Builder, Request.Builder> configureRequest) {
+  RestAssert(String url) {
+    this(url, identity(), identity());
+  }
+
+  RestAssert(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
     this.url = url;
     this.configureRequest = configureRequest;
+    this.configureClient = configureClient;
   }
 
   private RestResponse response() {
     if (response == null) {
-      response = RestResponse.call(url, configureRequest);
+      response = RestResponse.call(url, configureClient, configureRequest);
     }
     return response;
   }
 
   // Configuration
   public RestAssert withHeader(String name, String value) {
-    return new RestAssert(url, configureRequest.andThen(request -> request.addHeader(name, value)));
+    return new RestAssert(url, configureClient, configureRequest.andThen(request -> request.addHeader(name, value)));
   }
 
   public RestAssert withPreemptiveAuthentication(String login, String password) {
     return withHeader("Authorization", Credentials.basic(login, password));
+  }
+
+  public RestAssert withAuthentication(String login, String password) {
+    return new RestAssert(url, client -> client.setAuthenticator(new Authenticator() {
+      AtomicInteger tries = new AtomicInteger(0);
+
+      @Override
+      public Request authenticate(Proxy proxy, Response response) throws IOException {
+        if (tries.getAndIncrement() > 0) {
+          return null;
+        }
+        String credential = Credentials.basic(login, password);
+        return response.request().newBuilder().header("Authorization", credential).build();
+      }
+
+      @Override
+      public Request authenticateProxy(Proxy proxy, Response response) {
+        return null;
+      }
+    }), configureRequest);
   }
 
   // Assertions

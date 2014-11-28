@@ -24,6 +24,6 @@ public interface FluentRestTest {
 
   // GET
   default RestAssert get(String path) {
-    return new RestAssert(baseUrl() + path, request -> request);
+    return new RestAssert(baseUrl() + path);
   }
 }

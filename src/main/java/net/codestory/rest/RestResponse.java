@@ -31,13 +31,11 @@ class RestResponse {
     this.response = response;
   }
 
-  public static RestResponse call(String url, Function<Request.Builder, Request.Builder> configureRequest) {
-    Request.Builder request = new Request.Builder().url(url);
-    request = configureRequest.apply(request);
-
-    OkHttpClient client = new OkHttpClient();
-
+  public static RestResponse call(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
     try {
+      Request.Builder request = configureRequest.apply(new Request.Builder().url(url));
+      OkHttpClient client = configureClient.apply(new OkHttpClient());
+
       return new RestResponse(client.newCall(request.build()).execute());
     } catch (IOException e) {
       throw new RuntimeException("Unable to query: " + url, e);
