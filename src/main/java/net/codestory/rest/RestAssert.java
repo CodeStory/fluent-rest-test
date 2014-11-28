@@ -36,30 +36,23 @@ public class RestAssert {
     this(url, identity(), identity());
   }
 
-  RestAssert(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
+  private RestAssert(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
     this.url = url;
     this.configureRequest = configureRequest;
     this.configureClient = configureClient;
   }
 
-  private RestResponse response() {
-    if (response == null) {
-      response = RestResponse.call(url, configureClient, configureRequest);
-    }
-    return response;
-  }
-
   // Configuration
   public RestAssert withHeader(String name, String value) {
-    return new RestAssert(url, configureClient, configureRequest.andThen(request -> request.addHeader(name, value)));
+    return withRequest(request -> request.addHeader(name, value));
   }
 
   public RestAssert withPreemptiveAuthentication(String login, String password) {
-    return withHeader("Authorization", Credentials.basic(login, password));
+    return withRequest(request -> request.addHeader("Authorization", Credentials.basic(login, password)));
   }
 
   public RestAssert withAuthentication(String login, String password) {
-    return new RestAssert(url, client -> client.setAuthenticator(new Authenticator() {
+    return withClient(client -> client.setAuthenticator(new Authenticator() {
       AtomicInteger tries = new AtomicInteger(0);
 
       @Override
@@ -75,7 +68,15 @@ public class RestAssert {
       public Request authenticateProxy(Proxy proxy, Response response) {
         return null;
       }
-    }), configureRequest);
+    }));
+  }
+
+  private RestAssert withRequest(Function<Request.Builder, Request.Builder> configure) {
+    return new RestAssert(url, configureClient, configureRequest.andThen(configure));
+  }
+
+  private RestAssert withClient(Function<OkHttpClient, OkHttpClient> configure) {
+    return new RestAssert(url, configureClient.andThen(configure), configureRequest);
   }
 
   // Assertions
@@ -101,6 +102,13 @@ public class RestAssert {
 
   public RestAssert produces(int statusCode, String contentType, String content) {
     return produces(statusCode).produces(contentType, content);
+  }
+
+  private RestResponse response() {
+    if (response == null) {
+      response = RestResponse.call(url, configureClient, configureRequest);
+    }
+    return response;
   }
 
   // Verifications
