@@ -17,6 +17,8 @@ package net.codestory.rest;
 
 import java.util.Objects;
 
+import static java.lang.String.format;
+
 public class Should {
   private final RestResponse response;
 
@@ -45,16 +47,16 @@ public class Should {
   }
 
   // Verifications
-  private Should assertEquals(Object actualValue, Object expectedValue) {
-    if (!Objects.equals(expectedValue, actualValue)) {
-      throw new AssertionError(String.format("Expecting \"%s\" was \"%s\"", expectedValue, actualValue));
+  private Should assertEquals(Object actual, Object expected) {
+    if (!Objects.equals(expected, actual)) {
+      throw new AssertionError(format("Expecting \"%s\" was \"%s\"", expected, actual));
     }
     return this;
   }
 
-  private Should assertContains(String actualValue, String expectedValue) {
-    if (!actualValue.contains(expectedValue)) {
-      throw new AssertionError(String.format("Expecting \"%s\" to contain \"%s\"", actualValue, expectedValue));
+  private Should assertContains(String actual, String expected) {
+    if (!actual.contains(expected)) {
+      throw new AssertionError(format("Expecting \"%s\" to contain \"%s\"", actual, expected));
     }
     return this;
   }
