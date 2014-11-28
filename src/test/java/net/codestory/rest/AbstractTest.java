@@ -15,27 +15,13 @@
  */
 package net.codestory.rest;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import net.codestory.http.WebServer;
 
-public class GetTest extends AbstractTest {
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
+public abstract class AbstractTest implements FluentRestTest {
+  static WebServer server = new WebServer().startOnRandomPort();
 
-  @Test
-  public void get() {
-    server.configure(routes -> routes.get("/", "hello"));
-
-    get("/").produces("hello");
-  }
-
-  @Test
-  public void fail_to_get() {
-    server.configure(routes -> routes.get("/", "hello"));
-
-    thrown.expect(AssertionError.class);
-
-    get("/").produces("good bye");
+  @Override
+  public int port() {
+    return server.port();
   }
 }
