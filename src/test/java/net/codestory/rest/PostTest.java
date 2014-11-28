@@ -15,18 +15,19 @@
  */
 package net.codestory.rest;
 
-public interface FluentRestTest {
-  int port();
+import net.codestory.http.payload.Payload;
+import org.junit.Test;
 
-  default String baseUrl() {
-    return "http://localhost:" + port();
-  }
+public class PostTest extends AbstractTest {
+  @Test
+  public void post() {
+    server.configure(routes -> routes
+        .post("/", () -> Payload.created())
+    );
 
-  default RestAssert get(String path) {
-    return new RestAssert(baseUrl() + path);
-  }
-
-  default RestAssert post(String path) {
-    return new RestAssert(baseUrl() + path, request -> request.post(null));
+    post("/")
+      .produces(201)
+      .produces("")
+      .produces(201, "");
   }
 }
