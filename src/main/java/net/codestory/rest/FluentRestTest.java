@@ -15,6 +15,7 @@
  */
 package net.codestory.rest;
 
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 
@@ -35,5 +36,15 @@ public interface FluentRestTest {
 
   default RestAssert post(String path, String body) {
     return get(path).withRequest(request -> request.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body)));
+  }
+
+  default RestAssert post(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
+    FormEncodingBuilder form = new FormEncodingBuilder();
+    form.add(firstParameterName, firstParameterValue.toString());
+    for (int i = 0; i < parameterNameValuePairs.length; i += 2) {
+      form.add(parameterNameValuePairs[i].toString(), parameterNameValuePairs[i + 1].toString());
+    }
+
+    return get(path).withRequest(request -> request.post(form.build()));
   }
 }

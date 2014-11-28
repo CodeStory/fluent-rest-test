@@ -44,4 +44,18 @@ public class PostTest extends AbstractTest {
       .produces(201, "<body>")
       .produces(201, "text/plain", "<body>");
   }
+
+  @Test
+  public void post_form() {
+    server.configure(routes -> routes
+        .post("/", context -> new Payload("text/plain", context.get("key1") + "&" + context.get("key2"), 201))
+    );
+
+    post("/", "key1", "1st", "key2", "2nd")
+      .produces(201)
+      .produces("1st&2nd")
+      .produces("text/plain", "1st&2nd")
+      .produces(201, "1st&2nd")
+      .produces(201, "text/plain", "1st&2nd");
+  }
 }
