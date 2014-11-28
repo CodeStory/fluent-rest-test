@@ -64,4 +64,9 @@ public interface FluentRestTest {
   default RestAssert put(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
     return get(path).withRequest(request -> request.put(PostBody.form(firstParameterName, firstParameterValue, parameterNameValuePairs)));
   }
+
+  // OPTIONS
+  default RestAssert options(String path) {
+    return get(path).withRequest(request -> request.method("OPTIONS", null));
+  }
 }
