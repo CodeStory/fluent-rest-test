@@ -24,18 +24,22 @@ public interface FluentRestTest {
     return "http://localhost:" + port();
   }
 
+  // GET
   default RestAssert get(String path) {
     return new RestAssert(baseUrl() + path);
   }
 
+  // DELETE
   default RestAssert delete(String path) {
     return get(path).withRequest(request -> request.delete());
   }
 
+  // HEAD
   default RestAssert head(String path) {
     return get(path).withRequest(request -> request.head());
   }
 
+  // POST
   default RestAssert post(String path) {
     return get(path).withRequest(request -> request.post(PostBody.none()));
   }
@@ -46,5 +50,18 @@ public interface FluentRestTest {
 
   default RestAssert post(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
     return get(path).withRequest(request -> request.post(PostBody.form(firstParameterName, firstParameterValue, parameterNameValuePairs)));
+  }
+
+  // PUT
+  default RestAssert put(String path) {
+    return get(path).withRequest(request -> request.put(PostBody.none()));
+  }
+
+  default RestAssert put(String path, String body) {
+    return get(path).withRequest(request -> request.put(PostBody.json(body)));
+  }
+
+  default RestAssert put(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
+    return get(path).withRequest(request -> request.put(PostBody.form(firstParameterName, firstParameterValue, parameterNameValuePairs)));
   }
 }
