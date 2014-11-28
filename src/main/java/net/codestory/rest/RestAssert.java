@@ -36,10 +36,6 @@ public class RestAssert {
     this(url, identity(), identity());
   }
 
-  RestAssert(String url, Function<Request.Builder, Request.Builder> configureRequest) {
-    this(url, identity(), configureRequest);
-  }
-
   private RestAssert(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
     this.url = url;
     this.configureRequest = configureRequest;
@@ -75,7 +71,7 @@ public class RestAssert {
     }));
   }
 
-  private RestAssert withRequest(Function<Request.Builder, Request.Builder> configure) {
+  RestAssert withRequest(Function<Request.Builder, Request.Builder> configure) {
     return new RestAssert(url, configureClient, configureRequest.andThen(configure));
   }
 

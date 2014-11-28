@@ -27,6 +27,6 @@ public interface FluentRestTest {
   }
 
   default RestAssert post(String path) {
-    return new RestAssert(baseUrl() + path, request -> request.post(null));
+    return new RestAssert(baseUrl() + path).withRequest(request -> request.post(null));
   }
 }
