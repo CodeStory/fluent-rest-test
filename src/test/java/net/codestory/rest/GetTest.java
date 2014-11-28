@@ -27,7 +27,11 @@ public class GetTest extends AbstractTest {
   public void get() {
     server.configure(routes -> routes.get("/", "hello"));
 
+    get("/").produces(200);
     get("/").produces("hello");
+    get("/").produces("text/html;charset=UTF-8", "hello");
+    get("/").produces(200, "hello");
+    get("/").produces(200, "text/html;charset=UTF-8", "hello");
   }
 
   @Test
@@ -35,6 +39,7 @@ public class GetTest extends AbstractTest {
     server.configure(routes -> routes.get("/", "hello"));
 
     thrown.expect(AssertionError.class);
+    thrown.expectMessage("hello");
 
     get("/").produces("good bye");
   }

@@ -25,25 +25,48 @@ public class RestAssert {
   private final Response response;
 
   RestAssert(String url) {
+    Request request = new Request.Builder().url(url).build();
+    OkHttpClient client = new OkHttpClient();
+
     try {
-      Request request = new Request.Builder().url(url).build();
-
-      OkHttpClient client = new OkHttpClient();
-
       response = client.newCall(request).execute();
     } catch (IOException e) {
       throw new AssertionError("Unable to query: " + url, e);
     }
   }
 
-  // Assertions
+  public void produces(int statusCode) {
+    if (response.code() != statusCode) {
+      throw new AssertionError(response.code());
+    }
+  }
+
   public void produces(String content) {
     try {
-      if (!response.body().string().contains(content)) {
-        throw new AssertionError("TODO");
+      String actualContent = response.body().string();
+      if (!actualContent.equals(content)) {
+        throw new AssertionError(actualContent);
       }
     } catch (IOException e) {
       throw new AssertionError("Unable to read response as String", e);
     }
+  }
+
+  public void produces(String contentType, String content) {
+    String actualContentType = response.header("Content-Type");
+    if (!actualContentType.equals(contentType)) {
+      throw new AssertionError(actualContentType);
+    }
+    produces(content);
+  }
+
+  public void produces(int statusCode, String content) {
+    produces(statusCode);
+    produces(content);
+  }
+
+  public void produces(int statusCode, String contentType, String content) {
+    produces(statusCode);
+    produces(contentType, content);
   }
 }
