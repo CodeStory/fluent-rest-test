@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class DeleteTest extends AbstractTest {
   @Test
-  public void delete_empty() {
+  public void delete() {
     server.configure(routes -> routes
         .delete("/", () -> Payload.ok())
     );
