@@ -15,10 +15,8 @@
  */
 package net.codestory.rest;
 
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -35,18 +33,8 @@ public class RestAssert {
 
   private RestResponse response() {
     if (response == null) {
-      Request.Builder request = new Request.Builder().url(url);
-      request = configureRequest.apply(request);
-
-      OkHttpClient client = new OkHttpClient();
-
-      try {
-        response = new RestResponse(client.newCall(request.build()).execute());
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to query: " + url, e);
-      }
+      response = RestResponse.call(url, configureRequest);
     }
-
     return response;
   }
 

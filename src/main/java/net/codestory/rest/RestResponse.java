@@ -15,17 +15,33 @@
  */
 package net.codestory.rest;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 class RestResponse {
   private final Response response;
 
   private String bodyAsString;
 
-  RestResponse(Response response) {
+  private RestResponse(Response response) {
     this.response = response;
+  }
+
+  public static RestResponse call(String url, Function<Request.Builder, Request.Builder> configureRequest) {
+    Request.Builder request = new Request.Builder().url(url);
+    request = configureRequest.apply(request);
+
+    OkHttpClient client = new OkHttpClient();
+
+    try {
+      return new RestResponse(client.newCall(request.build()).execute());
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to query: " + url, e);
+    }
   }
 
   public int code() {
