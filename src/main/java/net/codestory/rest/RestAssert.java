@@ -17,56 +17,56 @@ package net.codestory.rest;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
 public class RestAssert {
-  private final Response response;
+  private final RestResponse response;
 
   RestAssert(String url) {
     Request request = new Request.Builder().url(url).build();
     OkHttpClient client = new OkHttpClient();
 
     try {
-      response = client.newCall(request).execute();
+      response = new RestResponse(client.newCall(request).execute());
     } catch (IOException e) {
-      throw new AssertionError("Unable to query: " + url, e);
+      throw new RuntimeException("Unable to query: " + url, e);
     }
   }
 
-  public void produces(int statusCode) {
+  public RestAssert produces(int statusCode) {
     if (response.code() != statusCode) {
       throw new AssertionError(response.code());
     }
+    return this;
   }
 
-  public void produces(String content) {
-    try {
-      String actualContent = response.body().string();
-      if (!actualContent.equals(content)) {
-        throw new AssertionError(actualContent);
-      }
-    } catch (IOException e) {
-      throw new AssertionError("Unable to read response as String", e);
+  public RestAssert produces(String content) {
+    String actualContent = response.bodyAsString();
+    if (!actualContent.equals(content)) {
+      throw new AssertionError(actualContent);
     }
+    return this;
   }
 
-  public void produces(String contentType, String content) {
-    String actualContentType = response.header("Content-Type");
+  public RestAssert produces(String contentType, String content) {
+    String actualContentType = response.contentType();
     if (!actualContentType.equals(contentType)) {
       throw new AssertionError(actualContentType);
     }
     produces(content);
+    return this;
   }
 
-  public void produces(int statusCode, String content) {
+  public RestAssert produces(int statusCode, String content) {
     produces(statusCode);
     produces(content);
+    return this;
   }
 
-  public void produces(int statusCode, String contentType, String content) {
+  public RestAssert produces(int statusCode, String contentType, String content) {
     produces(statusCode);
     produces(contentType, content);
+    return this;
   }
 }
