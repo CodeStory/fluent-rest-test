@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class PostTest extends AbstractTest {
   @Test
-  public void post() {
+  public void post_empty() {
     server.configure(routes -> routes
         .post("/", () -> Payload.created())
     );
@@ -29,5 +29,19 @@ public class PostTest extends AbstractTest {
       .produces(201)
       .produces("")
       .produces(201, "");
+  }
+
+  @Test
+  public void post_body() {
+    server.configure(routes -> routes
+        .post("/", context -> new Payload("text/plain", context.contentAsString(), 201))
+    );
+
+    post("/", "<body>")
+      .produces(201)
+      .produces("<body>")
+      .produces("text/plain", "<body>")
+      .produces(201, "<body>")
+      .produces(201, "text/plain", "<body>");
   }
 }

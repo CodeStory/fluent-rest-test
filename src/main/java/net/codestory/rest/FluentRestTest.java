@@ -15,6 +15,9 @@
  */
 package net.codestory.rest;
 
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
+
 public interface FluentRestTest {
   int port();
 
@@ -27,6 +30,10 @@ public interface FluentRestTest {
   }
 
   default RestAssert post(String path) {
-    return new RestAssert(baseUrl() + path).withRequest(request -> request.post(null));
+    return get(path).withRequest(request -> request.post(null));
+  }
+
+  default RestAssert post(String path, String body) {
+    return get(path).withRequest(request -> request.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body)));
   }
 }
