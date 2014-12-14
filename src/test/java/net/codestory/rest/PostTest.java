@@ -21,7 +21,7 @@ import org.junit.Test;
 public class PostTest extends AbstractTest {
   @Test
   public void post_empty() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .post("/", () -> Payload.created())
     );
 
@@ -32,7 +32,7 @@ public class PostTest extends AbstractTest {
 
   @Test
   public void post_body() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .post("/", context -> new Payload("text/plain", context.contentAsString(), 201))
     );
 
@@ -41,7 +41,7 @@ public class PostTest extends AbstractTest {
 
   @Test
   public void post_form() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .post("/", context -> new Payload("text/plain", context.get("key1") + "&" + context.get("key2"), 201))
     );
 

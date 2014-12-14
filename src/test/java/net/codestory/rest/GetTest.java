@@ -29,7 +29,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", "hello World")
     );
 
@@ -38,7 +38,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void fail_to_get() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", "hello")
     );
 
@@ -50,7 +50,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get_with_header() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> context.header("name"))
     );
 
@@ -59,7 +59,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get_with_headers() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> context.header("first") + context.header("second"))
     );
 
@@ -68,7 +68,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get_with_preemptive_authentication() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .filter(new BasicAuthFilter("/", "realm", singleUser("login", "pwd")))
         .get("/", context -> "Secret")
     );
@@ -80,7 +80,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get_with_basic_authentication() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .filter(new BasicAuthFilter("/", "realm", singleUser("login", "pwd")))
         .get("/", context -> "Secret")
     );
@@ -92,7 +92,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get_cookie() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> new Payload("Hello").withCookie("name", "value"))
     );
 
@@ -101,7 +101,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void get_cookies() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> new Payload("").withCookie("first", "1st").withCookie("second", "2nd"))
     );
 
@@ -110,7 +110,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void fail_without_cookie() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> "")
     );
 
@@ -121,7 +121,7 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void fail_with_wrong_cookie() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> new Payload("").withCookie("name", "value"))
     );
 

@@ -20,7 +20,7 @@ import org.junit.Test;
 public class OptionsTest extends AbstractTest {
   @Test
   public void options() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .options("/", "Hello")
     );
 

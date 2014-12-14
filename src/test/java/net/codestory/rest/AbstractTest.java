@@ -15,13 +15,18 @@
  */
 package net.codestory.rest;
 
+import net.codestory.http.Configuration;
 import net.codestory.http.WebServer;
 
 public abstract class AbstractTest implements FluentRestTest {
-  static WebServer server = new WebServer().startOnRandomPort();
+  private static WebServer server = new WebServer().startOnRandomPort();
 
   @Override
   public int port() {
     return server.port();
+  }
+
+  protected void configure(Configuration configuration) {
+    server.configure(configuration);
   }
 }

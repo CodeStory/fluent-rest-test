@@ -21,7 +21,7 @@ import org.junit.Test;
 public class HeadTest extends AbstractTest {
   @Test
   public void head() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/get", "Hello")
         .head("/head", Payload.ok())
     );
