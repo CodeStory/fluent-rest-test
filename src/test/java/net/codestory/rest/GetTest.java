@@ -43,7 +43,7 @@ public class GetTest extends AbstractTest {
     );
 
     thrown.expect(AssertionError.class);
-    thrown.expectMessage("Expecting \"hello\" to contain \"good bye\"");
+    thrown.expectMessage("Expecting [hello] to contain [good bye]");
 
     get("/").should().contain("good bye");
   }
@@ -115,6 +115,7 @@ public class GetTest extends AbstractTest {
     );
 
     thrown.expect(AssertionError.class);
+    thrown.expectMessage("Expecting [cookie ??] to be [??]. It was [null]");
 
     get("/").should().haveCookie("??", "??");
   }
@@ -126,13 +127,14 @@ public class GetTest extends AbstractTest {
     );
 
     thrown.expect(AssertionError.class);
+    thrown.expectMessage("Expecting [cookie name] to be [??]. It was [value]");
 
     get("/").should().haveCookie("name", "??");
   }
 
   @Test
   public void get_header() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> new Payload("").withHeader("name", "value"))
     );
 
@@ -141,19 +143,25 @@ public class GetTest extends AbstractTest {
 
   @Test
   public void fail_without_header() {
-    server.configure(routes -> routes
-        .get("/", context -> new Payload("").withHeader("name", "value"))
+    configure(routes -> routes
+        .get("/", context -> new Payload(""))
     );
 
-    get("/").should().haveHeader("name", "value");
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("Expecting [header name] to be [??]. It was [null]");
+
+    get("/").should().haveHeader("name", "??");
   }
 
   @Test
   public void fail_with_wrong_header() {
-    server.configure(routes -> routes
+    configure(routes -> routes
         .get("/", context -> new Payload("").withHeader("name", "value"))
     );
 
-    get("/").should().haveHeader("name", "value");
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("Expecting [header name] to be [??]. It was [value]");
+
+    get("/").should().haveHeader("name", "??");
   }
 }

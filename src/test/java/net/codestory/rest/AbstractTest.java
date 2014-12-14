@@ -18,7 +18,7 @@ package net.codestory.rest;
 import net.codestory.http.Configuration;
 import net.codestory.http.WebServer;
 
-public abstract class AbstractTest implements FluentRestTest {
+abstract class AbstractTest implements FluentRestTest {
   private static WebServer server = new WebServer().startOnRandomPort();
 
   @Override

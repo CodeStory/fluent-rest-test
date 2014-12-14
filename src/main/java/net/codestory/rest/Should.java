@@ -27,7 +27,7 @@ public class Should {
   }
 
   public Should respond(int statusCode) {
-    return assertEquals(response.code(), statusCode);
+    return assertEquals("status code", response.code(), statusCode);
   }
 
   public Should contain(String content) {
@@ -39,24 +39,24 @@ public class Should {
   }
 
   public Should haveCookie(String name, String value) {
-    return assertEquals(response.cookie(name), value);
+    return assertEquals("cookie " + name, response.cookie(name), value);
   }
 
   public Should haveHeader(String name, String value) {
-    return assertEquals(response.header(name), value);
+    return assertEquals("header " + name, response.header(name), value);
   }
 
   // Verifications
-  private Should assertEquals(Object actual, Object expected) {
+  private Should assertEquals(String what, Object actual, Object expected) {
     if (!Objects.equals(expected, actual)) {
-      throw new AssertionError(format("Expecting \"%s\" was \"%s\"", expected, actual));
+      throw new AssertionError(format("Expecting [%s] to be [%s]. It was [%s]", what, expected, actual));
     }
     return this;
   }
 
   private Should assertContains(String actual, String expected) {
     if (!actual.contains(expected)) {
-      throw new AssertionError(format("Expecting \"%s\" to contain \"%s\"", actual, expected));
+      throw new AssertionError(format("Expecting [%s] to contain [%s]", actual, expected));
     }
     return this;
   }
