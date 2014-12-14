@@ -41,15 +41,15 @@ public class RestAssert {
 
   // Configuration
   public RestAssert withHeader(String name, String value) {
-    return withRequest(request -> request.addHeader(name, value));
+    return withRequest(addHeader(name, value));
   }
 
   public RestAssert withPreemptiveAuthentication(String login, String password) {
-    return withRequest(request -> addBasicAuthHeader(request, login, password));
+    return withRequest(addBasicAuthHeader(login, password));
   }
 
   public RestAssert withAuthentication(String login, String password) {
-    return withClient(client -> client.setAuthenticator(new Authenticator() {
+    return withClient(setAuthenticator(new Authenticator() {
       AtomicInteger tries = new AtomicInteger(0);
 
       @Override
@@ -57,7 +57,7 @@ public class RestAssert {
         if (tries.getAndIncrement() > 0) {
           return null;
         }
-        return addBasicAuthHeader(response.request().newBuilder(), login, password).build();
+        return addBasicAuthHeader(login, password).apply(response.request().newBuilder()).build();
       }
 
       @Override
@@ -84,8 +84,17 @@ public class RestAssert {
     }
   }
 
-  // Internal
-  private static Request.Builder addBasicAuthHeader(Request.Builder request, String login, String password) {
-    return request.addHeader("Authorization", Credentials.basic(login, password));
+  // Client modification
+  private static Function<OkHttpClient, OkHttpClient> setAuthenticator(Authenticator authenticator) {
+    return client -> client.setAuthenticator(authenticator);
+  }
+
+  // Request configuration
+  private static Function<Request.Builder, Request.Builder> addBasicAuthHeader(String login, String password) {
+    return addHeader("Authorization", Credentials.basic(login, password));
+  }
+
+  private static Function<Request.Builder, Request.Builder> addHeader(String name, String value) {
+    return request -> request.addHeader(name, value);
   }
 }
