@@ -39,6 +39,15 @@ public class RestAssert {
     this.configureClient = configureClient;
   }
 
+  // Creation
+  RestAssert withRequest(UnaryOperator<Request.Builder> configure) {
+    return new RestAssert(url, configureClient, request -> configure.apply(configureRequest.apply(request)));
+  }
+
+  private RestAssert withClient(UnaryOperator<OkHttpClient> configure) {
+    return new RestAssert(url, client -> configure.apply(configureClient.apply(client)), configureRequest);
+  }
+
   // Configuration
   public RestAssert withHeader(String name, String value) {
     return withRequest(addHeader(name, value));
@@ -65,14 +74,6 @@ public class RestAssert {
         return null;
       }
     }));
-  }
-
-  RestAssert withRequest(UnaryOperator<Request.Builder> configure) {
-    return new RestAssert(url, configureClient, request -> configure.apply(configureRequest.apply(request)));
-  }
-
-  RestAssert withClient(UnaryOperator<OkHttpClient> configure) {
-    return new RestAssert(url, client -> configure.apply(configureClient.apply(client)), configureRequest);
   }
 
   // Assertions
