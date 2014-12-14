@@ -17,16 +17,11 @@ package net.codestory.rest;
 
 import net.codestory.http.filters.basic.BasicAuthFilter;
 import net.codestory.http.payload.Payload;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static net.codestory.http.security.Users.singleUser;
 
 public class GetTest extends AbstractTest {
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
   @Test
   public void get() {
     configure(routes -> routes
@@ -42,8 +37,7 @@ public class GetTest extends AbstractTest {
         .get("/", "hello")
     );
 
-    thrown.expect(AssertionError.class);
-    thrown.expectMessage("Expecting [hello] to contain [good bye]");
+    expectAssertionError("Expecting [hello] to contain [good bye]");
 
     get("/").should().contain("good bye");
   }
@@ -114,8 +108,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> "")
     );
 
-    thrown.expect(AssertionError.class);
-    thrown.expectMessage("Expecting [cookie ??] to be [??]. It was [null]");
+    expectAssertionError("Expecting [cookie ??] to be [??]. It was [null]");
 
     get("/").should().haveCookie("??", "??");
   }
@@ -126,8 +119,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withCookie("name", "value"))
     );
 
-    thrown.expect(AssertionError.class);
-    thrown.expectMessage("Expecting [cookie name] to be [??]. It was [value]");
+    expectAssertionError("Expecting [cookie name] to be [??]. It was [value]");
 
     get("/").should().haveCookie("name", "??");
   }
@@ -147,8 +139,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload(""))
     );
 
-    thrown.expect(AssertionError.class);
-    thrown.expectMessage("Expecting [header name] to be [??]. It was [null]");
+    expectAssertionError("Expecting [header name] to be [??]. It was [null]");
 
     get("/").should().haveHeader("name", "??");
   }
@@ -159,8 +150,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withHeader("name", "value"))
     );
 
-    thrown.expect(AssertionError.class);
-    thrown.expectMessage("Expecting [header name] to be [??]. It was [value]");
+    expectAssertionError("Expecting [header name] to be [??]. It was [value]");
 
     get("/").should().haveHeader("name", "??");
   }

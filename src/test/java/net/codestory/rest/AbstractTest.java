@@ -17,9 +17,14 @@ package net.codestory.rest;
 
 import net.codestory.http.Configuration;
 import net.codestory.http.WebServer;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
-abstract class AbstractTest implements FluentRestTest {
+public abstract class AbstractTest implements FluentRestTest {
   private static WebServer server = new WebServer().startOnRandomPort();
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Override
   public int port() {
@@ -28,5 +33,10 @@ abstract class AbstractTest implements FluentRestTest {
 
   protected void configure(Configuration configuration) {
     server.configure(configuration);
+  }
+
+  protected void expectAssertionError(String message) {
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage(message);
   }
 }
