@@ -53,7 +53,7 @@ public class RestAssert {
       AtomicInteger tries = new AtomicInteger(0);
 
       @Override
-      public Request authenticate(Proxy proxy, Response response) throws IOException {
+      public Request authenticate(Proxy proxy, Response response) {
         if (tries.getAndIncrement() > 0) {
           return null;
         }
