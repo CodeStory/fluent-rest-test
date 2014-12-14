@@ -20,20 +20,20 @@ import com.squareup.okhttp.*;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
-import static java.util.function.Function.identity;
+import static java.util.function.UnaryOperator.identity;
 
 public class RestAssert {
   private final String url;
-  private final Function<OkHttpClient, OkHttpClient> configureClient;
-  private final Function<Request.Builder, Request.Builder> configureRequest;
+  private final UnaryOperator<OkHttpClient> configureClient;
+  private final UnaryOperator<Request.Builder> configureRequest;
 
   RestAssert(String url) {
     this(url, identity(), identity());
   }
 
-  private RestAssert(String url, Function<OkHttpClient, OkHttpClient> configureClient, Function<Request.Builder, Request.Builder> configureRequest) {
+  private RestAssert(String url, UnaryOperator<OkHttpClient> configureClient, UnaryOperator<Request.Builder> configureRequest) {
     this.url = url;
     this.configureRequest = configureRequest;
     this.configureClient = configureClient;
@@ -67,12 +67,12 @@ public class RestAssert {
     }));
   }
 
-  RestAssert withRequest(Function<Request.Builder, Request.Builder> configure) {
-    return new RestAssert(url, configureClient, configureRequest.andThen(configure));
+  RestAssert withRequest(UnaryOperator<Request.Builder> configure) {
+    return new RestAssert(url, configureClient, request -> configure.apply(configureRequest.apply(request)));
   }
 
-  RestAssert withClient(Function<OkHttpClient, OkHttpClient> configure) {
-    return new RestAssert(url, configureClient.andThen(configure), configureRequest);
+  RestAssert withClient(UnaryOperator<OkHttpClient> configure) {
+    return new RestAssert(url, client -> configure.apply(configureClient.apply(client)), configureRequest);
   }
 
   // Assertions
@@ -85,16 +85,16 @@ public class RestAssert {
   }
 
   // Client modification
-  private static Function<OkHttpClient, OkHttpClient> setAuthenticator(Authenticator authenticator) {
+  private static UnaryOperator<OkHttpClient> setAuthenticator(Authenticator authenticator) {
     return client -> client.setAuthenticator(authenticator);
   }
 
   // Request configuration
-  private static Function<Request.Builder, Request.Builder> addBasicAuthHeader(String login, String password) {
+  private static UnaryOperator<Request.Builder> addBasicAuthHeader(String login, String password) {
     return addHeader("Authorization", Credentials.basic(login, password));
   }
 
-  private static Function<Request.Builder, Request.Builder> addHeader(String name, String value) {
+  private static UnaryOperator<Request.Builder> addHeader(String name, String value) {
     return request -> request.addHeader(name, value);
   }
 }
