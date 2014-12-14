@@ -45,7 +45,7 @@ public class RestAssert {
   }
 
   public RestAssert withPreemptiveAuthentication(String login, String password) {
-    return withRequest(request -> request.addHeader("Authorization", Credentials.basic(login, password)));
+    return withRequest(request -> addBasicAuthHeader(request, login, password));
   }
 
   public RestAssert withAuthentication(String login, String password) {
@@ -57,8 +57,7 @@ public class RestAssert {
         if (tries.getAndIncrement() > 0) {
           return null;
         }
-        String credential = Credentials.basic(login, password);
-        return response.request().newBuilder().header("Authorization", credential).build();
+        return addBasicAuthHeader(response.request().newBuilder(), login, password).build();
       }
 
       @Override
@@ -83,5 +82,10 @@ public class RestAssert {
     } catch (IOException e) {
       throw new RuntimeException("Unable to query: " + url, e);
     }
+  }
+
+  // Internal
+  private static Request.Builder addBasicAuthHeader(Request.Builder request, String login, String password) {
+    return request.addHeader("Authorization", Credentials.basic(login, password));
   }
 }
