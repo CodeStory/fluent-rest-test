@@ -37,7 +37,7 @@ public class GetTest extends AbstractTest {
         .get("/", "hello")
     );
 
-    expectAssertionError("Expecting [hello] to contain [good bye]");
+    shouldFail("Expecting [hello] to contain [good bye]");
 
     get("/").should().contain("good bye");
   }
@@ -108,7 +108,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> "")
     );
 
-    expectAssertionError("Expecting [cookie ??] to be [??]. It was [null]");
+    shouldFail("Expecting [cookie ??] to be [??]. It was [null]");
 
     get("/").should().haveCookie("??", "??");
   }
@@ -119,7 +119,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withCookie("name", "value"))
     );
 
-    expectAssertionError("Expecting [cookie name] to be [??]. It was [value]");
+    shouldFail("Expecting [cookie name] to be [??]. It was [value]");
 
     get("/").should().haveCookie("name", "??");
   }
@@ -139,7 +139,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload(""))
     );
 
-    expectAssertionError("Expecting [header name] to be [??]. It was [null]");
+    shouldFail("Expecting [header name] to be [??]. It was [null]");
 
     get("/").should().haveHeader("name", "??");
   }
@@ -150,7 +150,7 @@ public class GetTest extends AbstractTest {
         .get("/", context -> new Payload("").withHeader("name", "value"))
     );
 
-    expectAssertionError("Expecting [header name] to be [??]. It was [value]");
+    shouldFail("Expecting [header name] to be [??]. It was [value]");
 
     get("/").should().haveHeader("name", "??");
   }

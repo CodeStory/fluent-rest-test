@@ -35,7 +35,7 @@ public abstract class AbstractTest implements FluentRestTest {
     server.configure(configuration);
   }
 
-  protected void expectAssertionError(String message) {
+  protected void shouldFail(String message) {
     thrown.expect(AssertionError.class);
     thrown.expectMessage(message);
   }
