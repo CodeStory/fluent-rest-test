@@ -32,6 +32,11 @@ public class Should {
     return new Should(response, !negate);
   }
 
+  // TODO: shouldn't be able to write should().should()
+  public Should should() {
+    return new Should(response, false);
+  }
+
   public Should respond(int statusCode) {
     return assertEquals("status code", response.code(), statusCode);
   }

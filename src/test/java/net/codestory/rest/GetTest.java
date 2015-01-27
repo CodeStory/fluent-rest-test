@@ -173,4 +173,16 @@ public class GetTest extends AbstractTest {
     get("/").should().not().beEmpty();
     get("/").should().not().contain("Bye");
   }
+
+  @Test
+  public void chain() {
+    configure(routes -> routes
+        .get("/", "Hello")
+    );
+
+    get("/")
+        .should().contain("Hello")
+        .should().not().beEmpty()
+        .should().not().contain("Bye");
+  }
 }
