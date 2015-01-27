@@ -79,7 +79,7 @@ public class RestAssert {
   // Assertions
   public Should should() {
     try {
-      return new Should(RestResponse.call(url, configureClient, configureRequest));
+      return new Should(RestResponse.call(url, configureClient, configureRequest), false);
     } catch (IOException e) {
       throw new RuntimeException("Unable to query: " + url, e);
     }

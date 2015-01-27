@@ -21,9 +21,15 @@ import static java.lang.String.format;
 
 public class Should {
   private final RestResponse response;
+  private final boolean negate;
 
-  Should(RestResponse response) {
+  Should(RestResponse response, boolean negate) {
     this.response = response;
+    this.negate = negate;
+  }
+
+  public Should not() {
+    return new Should(response, !negate);
   }
 
   public Should respond(int statusCode) {
@@ -52,21 +58,21 @@ public class Should {
 
   // Verifications
   private Should assertEquals(String what, Object actual, Object expected) {
-    if (!Objects.equals(expected, actual)) {
+    if (negate == Objects.equals(expected, actual)) {
       throw new AssertionError(format("Expecting [%s] to be [%s]. It was [%s]", what, expected, actual));
     }
     return this;
   }
 
   private Should assertContains(String actual, String expected) {
-    if (!actual.contains(expected)) {
+    if (negate == actual.contains(expected)) {
       throw new AssertionError(format("Expecting [%s] to contain [%s]", actual, expected));
     }
     return this;
   }
 
   private Should assertEmpty(String actual) {
-    if (actual.isEmpty()) {
+    if (negate == actual.isEmpty()) {
       throw new AssertionError(format("Expecting [%s] to be empty", actual));
     }
     return this;
