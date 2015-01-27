@@ -34,6 +34,10 @@ public class Should {
     return assertContains(response.bodyAsString(), content);
   }
 
+  public Should beEmpty() {
+    return assertEmpty(response.bodyAsString());
+  }
+
   public Should haveType(String contentType) {
     return assertContains(response.contentType(), contentType);
   }
@@ -57,6 +61,13 @@ public class Should {
   private Should assertContains(String actual, String expected) {
     if (!actual.contains(expected)) {
       throw new AssertionError(format("Expecting [%s] to contain [%s]", actual, expected));
+    }
+    return this;
+  }
+
+  private Should assertEmpty(String actual) {
+    if (actual.isEmpty()) {
+      throw new AssertionError(format("Expecting [%s] to be empty", actual));
     }
     return this;
   }

@@ -154,4 +154,13 @@ public class GetTest extends AbstractTest {
 
     get("/").should().haveHeader("name", "??");
   }
+
+  @Test
+  public void empty() {
+    configure(routes -> routes
+        .get("/", "")
+    );
+
+    get("/").should().beEmpty();
+  }
 }
