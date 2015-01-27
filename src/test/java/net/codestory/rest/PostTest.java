@@ -33,7 +33,7 @@ public class PostTest extends AbstractTest {
   @Test
   public void post_body() {
     configure(routes -> routes
-        .post("/", context -> new Payload("text/plain", context.contentAsString(), 201))
+        .post("/", context -> new Payload("text/plain", context.request().content(), 201))
     );
 
     post("/", "<body>").should().respond(201).contain("<body>");

@@ -17,11 +17,18 @@ package net.codestory.rest;
 
 import net.codestory.http.Configuration;
 import net.codestory.http.WebServer;
+import net.codestory.http.misc.*;
+
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 public abstract class AbstractTest implements FluentRestTest {
-  private static WebServer server = new WebServer().startOnRandomPort();
+  private static WebServer server = new WebServer() {
+    @Override
+    protected Env createEnv() {
+      return Env.prod();
+    }
+  }.startOnRandomPort();
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();

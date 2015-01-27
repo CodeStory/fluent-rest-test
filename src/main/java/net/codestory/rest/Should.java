@@ -28,14 +28,18 @@ public class Should {
     this.negate = negate;
   }
 
-  public Should not() {
-    return new Should(response, !negate);
-  }
+  // Modifiers
 
-  // TODO: shouldn't be able to write should().should()
-  public Should should() {
-    return new Should(response, false);
-  }
+	public Should not() {
+		return new Should(response, !negate);
+	}
+
+	// Verifications
+
+	// TODO: shouldn't be able to write should().should()
+	public Should should() {
+		return new Should(response, false);
+	}
 
   public Should respond(int statusCode) {
     return assertEquals("status code", response.code(), statusCode);

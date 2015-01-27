@@ -48,6 +48,17 @@ public class RestAssert {
     return new RestAssert(url, client -> configure.apply(configureClient.apply(client)), configureRequest);
   }
 
+  // Extraction
+
+  public Response response() {
+    try {
+      RestResponse call = call();
+      return new Response(call.contentType(), call.bodyAsString(), call.code());
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to query: " + url, e);
+    }
+  }
+
   // Configuration
   public RestAssert withHeader(String name, String value) {
     return withRequest(addHeader(name, value));
@@ -62,7 +73,7 @@ public class RestAssert {
       AtomicInteger tries = new AtomicInteger(0);
 
       @Override
-      public Request authenticate(Proxy proxy, Response response) {
+      public Request authenticate(Proxy proxy, com.squareup.okhttp.Response response) {
         if (tries.getAndIncrement() > 0) {
           return null;
         }
@@ -70,7 +81,7 @@ public class RestAssert {
       }
 
       @Override
-      public Request authenticateProxy(Proxy proxy, Response response) {
+      public Request authenticateProxy(Proxy proxy, com.squareup.okhttp.Response response) {
         return null;
       }
     }));
@@ -79,7 +90,7 @@ public class RestAssert {
   // Assertions
   public Should should() {
     try {
-      return new Should(RestResponse.call(url, configureClient, configureRequest), false);
+      return new Should(call(), false);
     } catch (IOException e) {
       throw new RuntimeException("Unable to query: " + url, e);
     }
@@ -88,6 +99,11 @@ public class RestAssert {
   // Client modification
   private static UnaryOperator<OkHttpClient> setAuthenticator(Authenticator authenticator) {
     return client -> client.setAuthenticator(authenticator);
+  }
+
+  // Call
+  private RestResponse call() throws IOException {
+    return RestResponse.call(url, configureClient, configureRequest);
   }
 
   // Request configuration

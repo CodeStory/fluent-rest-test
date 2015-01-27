@@ -33,7 +33,7 @@ public class PutTest extends AbstractTest {
   @Test
   public void put_body() {
     configure(routes -> routes
-        .put("/", context -> new Payload("text/plain", context.contentAsString(), 201))
+        .put("/", context -> new Payload("text/plain", context.request().content(), 201))
     );
 
     put("/", "<body>").should().respond(201).contain("<body>");

@@ -20,6 +20,7 @@ import net.codestory.http.payload.Payload;
 import org.junit.Test;
 
 import static net.codestory.http.security.Users.singleUser;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetTest extends AbstractTest {
   @Test
@@ -184,5 +185,18 @@ public class GetTest extends AbstractTest {
         .should().contain("Hello")
         .should().not().beEmpty()
         .should().not().contain("Bye");
+  }
+
+  @Test
+  public void get_response() {
+    configure(routes -> routes
+        .get("/", "Hello")
+    );
+
+    Response response = get("/").response();
+
+    assertThat(response.contentType()).isEqualTo("text/html;charset=UTF-8");
+    assertThat(response.content()).isEqualTo("Hello");
+    assertThat(response.code()).isEqualTo(200);
   }
 }
