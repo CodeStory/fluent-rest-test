@@ -15,75 +15,24 @@
  */
 package net.codestory.rest;
 
-import java.util.Objects;
+public interface Should {
+    Should should();
 
-import static java.lang.String.format;
+    Should not();
 
-public class Should {
-  private final RestResponse response;
-  private final boolean negate;
+    Should respond(int statusCode);
 
-  Should(RestResponse response, boolean negate) {
-    this.response = response;
-    this.negate = negate;
-  }
+    Should succeed();
 
-  // Modifiers
+    Should fail();
 
-	public Should not() {
-		return new Should(response, !negate);
-	}
+    Should contain(String content);
 
-	// Verifications
+    Should beEmpty();
 
-	// TODO: shouldn't be able to write should().should()
-	public Should should() {
-		return new Should(response, false);
-	}
+    Should haveType(String contentType);
 
-  public Should respond(int statusCode) {
-    return assertEquals("status code", response.code(), statusCode);
-  }
+    Should haveCookie(String name, String value);
 
-  public Should contain(String content) {
-    return assertContains(response.bodyAsString(), content);
-  }
-
-  public Should beEmpty() {
-    return assertEmpty(response.bodyAsString());
-  }
-
-  public Should haveType(String contentType) {
-    return assertContains(response.contentType(), contentType);
-  }
-
-  public Should haveCookie(String name, String value) {
-    return assertEquals("cookie " + name, response.cookie(name), value);
-  }
-
-  public Should haveHeader(String name, String value) {
-    return assertEquals("header " + name, response.header(name), value);
-  }
-
-  // Verifications
-  private Should assertEquals(String what, Object actual, Object expected) {
-    if (negate == Objects.equals(expected, actual)) {
-      throw new AssertionError(format("Expecting [%s] to be [%s]. It was [%s]", what, expected, actual));
-    }
-    return this;
-  }
-
-  private Should assertContains(String actual, String expected) {
-    if (negate == actual.contains(expected)) {
-      throw new AssertionError(format("Expecting [%s] to contain [%s]", actual, expected));
-    }
-    return this;
-  }
-
-  private Should assertEmpty(String actual) {
-    if (negate == actual.isEmpty()) {
-      throw new AssertionError(format("Expecting [%s] to be empty", actual));
-    }
-    return this;
-  }
+    Should haveHeader(String name, String value);
 }

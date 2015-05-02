@@ -29,7 +29,7 @@ public class GetTest extends AbstractTest {
         .get("/", "hello World")
     );
 
-    get("/").should().respond(200).haveType("text/html").contain("hello");
+    get("/").should().respond(200).succeed().haveType("text/html").contain("hello");
   }
 
   @Test
@@ -82,7 +82,7 @@ public class GetTest extends AbstractTest {
 
     get("/").withAuthentication("login", "pwd").should().contain("Secret");
     get("/").withAuthentication("", "").should().respond(401);
-    get("/").should().respond(401);
+    get("/").should().respond(401).fail();
   }
 
   @Test
