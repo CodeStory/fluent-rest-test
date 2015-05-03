@@ -15,22 +15,6 @@
  */
 package net.codestory.rest;
 
-public interface Should {
-    Should not();
-
-    ShouldChain respond(int statusCode);
-
-    ShouldChain succeed();
-
-    ShouldChain fail();
-
-    ShouldChain contain(String content);
-
-    ShouldChain beEmpty();
-
-    ShouldChain haveType(String contentType);
-
-    ShouldChain haveCookie(String name, String value);
-
-    ShouldChain haveHeader(String name, String value);
+public interface ShouldChain extends Should {
+    ShouldChain should();
 }

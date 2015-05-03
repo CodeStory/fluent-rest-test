@@ -19,7 +19,7 @@ import java.util.Objects;
 
 import static java.lang.String.format;
 
-class RestResponseShould implements Should {
+class RestResponseShould implements ShouldChain {
   private final RestResponse response;
   private final boolean negate;
 
@@ -37,7 +37,6 @@ class RestResponseShould implements Should {
 
   // Verifications
 
-  // TODO: shouldn't be able to write should().should()
   @Override
   public RestResponseShould should() {
     return new RestResponseShould(response, false);
