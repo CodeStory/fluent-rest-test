@@ -24,8 +24,8 @@ public class PostBody {
     // Static class
   }
 
-  public static RequestBody none() {
-    return null;
+  public static RequestBody empty() {
+    return RequestBody.create(MediaType.parse("text/plain; charset=utf-8"), "");
   }
 
   public static RequestBody json(String body) {

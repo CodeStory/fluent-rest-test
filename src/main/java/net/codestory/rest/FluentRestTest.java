@@ -41,7 +41,7 @@ public interface FluentRestTest {
 
   // POST
   default RestAssert post(String path) {
-    return get(path).withRequest(request -> request.post(PostBody.none()));
+    return get(path).withRequest(request -> request.post(PostBody.empty()));
   }
 
   default RestAssert post(String path, String body) {
@@ -54,7 +54,7 @@ public interface FluentRestTest {
 
   // PUT
   default RestAssert put(String path) {
-    return get(path).withRequest(request -> request.put(PostBody.none()));
+    return get(path).withRequest(request -> request.put(PostBody.empty()));
   }
 
   default RestAssert put(String path, String body) {
