@@ -69,4 +69,18 @@ public interface FluentRestTest {
   default RestAssert options(String path) {
     return get(path).withRequest(request -> request.method("OPTIONS", null));
   }
+
+  // PATCH
+  default RestAssert patch(String path) {
+    return get(path).withRequest(request -> request.patch(PostBody.empty()));
+  }
+
+  default RestAssert patch(String path, String body) {
+    return get(path).withRequest(request -> request.patch(PostBody.json(body)));
+  }
+
+  default RestAssert patch(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
+    return get(path).withRequest(request -> request.patch(PostBody.form(firstParameterName, firstParameterValue, parameterNameValuePairs)));
+  }
+
 }
