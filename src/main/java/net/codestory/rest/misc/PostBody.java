@@ -17,7 +17,6 @@ package net.codestory.rest.misc;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public class PostBody {
@@ -42,13 +41,5 @@ public class PostBody {
     }
 
     return form.build();
-  }
-
-  public static RequestBody multipart(PartAdder... parts) {
-    MultipartBody.Builder multipartBuilder = new MultipartBody.Builder();
-    for (PartAdder p : parts) {
-      p.addPartTo(multipartBuilder);
-    }
-    return multipartBuilder.build();
   }
 }
