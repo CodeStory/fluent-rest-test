@@ -15,6 +15,7 @@
  */
 package net.codestory.rest;
 
+import net.codestory.rest.misc.PartAdder;
 import net.codestory.rest.misc.PostBody;
 import okhttp3.Request;
 
@@ -51,6 +52,10 @@ public interface FluentRestTest {
 
   default RestAssert post(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
     return get(path).withRequest(request -> request.post(PostBody.form(firstParameterName, firstParameterValue, parameterNameValuePairs)));
+  }
+
+  default RestAssert post(String path, PartAdder... parts) {
+    return get(path).withRequest(request -> request.post(PostBody.multipart(parts)));
   }
 
   // PUT

@@ -16,7 +16,11 @@
 package net.codestory.rest;
 
 import net.codestory.http.payload.Payload;
+import net.codestory.rest.misc.FilePartAdder;
+import net.codestory.rest.misc.FormPartAdder;
 import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
 
 public class PostTest extends AbstractTest {
   @Test
@@ -46,5 +50,17 @@ public class PostTest extends AbstractTest {
     );
 
     post("/", "key1", "1st", "key2", "2nd").should().respond(201).contain("1st&2nd");
+  }
+
+  @Test
+  public void post_multipart() {
+    configure(routes -> routes
+        .post("/", context -> new Payload("text/plain", "parts=" + context.parts(), 200))
+    );
+
+    post("/", new FormPartAdder("key", "val"),
+            new FilePartAdder("name", "filename.txt", "text/plain",
+                    new ByteArrayInputStream("text content".getBytes()))).
+            should().respond(200).contain("parts=2");
   }
 }
