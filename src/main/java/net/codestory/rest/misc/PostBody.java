@@ -15,9 +15,9 @@
  */
 package net.codestory.rest.misc;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class PostBody {
   private PostBody() {
@@ -33,7 +33,7 @@ public class PostBody {
   }
 
   public static RequestBody form(String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
-    FormEncodingBuilder form = new FormEncodingBuilder();
+    FormBody.Builder form = new FormBody.Builder();
 
     form.add(firstParameterName, firstParameterValue.toString());
     for (int i = 0; i < parameterNameValuePairs.length; i += 2) {
