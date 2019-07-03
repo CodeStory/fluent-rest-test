@@ -16,6 +16,7 @@
 package net.codestory.rest;
 
 import net.codestory.rest.misc.PostBody;
+import okhttp3.Request;
 
 public interface FluentRestTest {
   int port();
@@ -31,12 +32,12 @@ public interface FluentRestTest {
 
   // DELETE
   default RestAssert delete(String path) {
-    return get(path).withRequest(request -> request.delete());
+    return get(path).withRequest(Request.Builder::delete);
   }
 
   // HEAD
   default RestAssert head(String path) {
-    return get(path).withRequest(request -> request.head());
+    return get(path).withRequest(Request.Builder::head);
   }
 
   // POST

@@ -15,10 +15,10 @@
  */
 package net.codestory.rest;
 
-import com.squareup.okhttp.*;
+
+import okhttp3.*;
 
 import java.io.IOException;
-import java.net.Proxy;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.UnaryOperator;
 
@@ -26,14 +26,14 @@ import static java.util.function.UnaryOperator.identity;
 
 public class RestAssert {
   private final String url;
-  private final UnaryOperator<OkHttpClient> configureClient;
+  private final UnaryOperator<OkHttpClient.Builder> configureClient;
   private final UnaryOperator<Request.Builder> configureRequest;
 
   RestAssert(String url) {
     this(url, identity(), identity());
   }
 
-  private RestAssert(String url, UnaryOperator<OkHttpClient> configureClient, UnaryOperator<Request.Builder> configureRequest) {
+  private RestAssert(String url, UnaryOperator<OkHttpClient.Builder> configureClient, UnaryOperator<Request.Builder> configureRequest) {
     this.url = url;
     this.configureRequest = configureRequest;
     this.configureClient = configureClient;
@@ -44,7 +44,7 @@ public class RestAssert {
     return new RestAssert(url, configureClient, request -> configure.apply(configureRequest.apply(request)));
   }
 
-  private RestAssert withClient(UnaryOperator<OkHttpClient> configure) {
+  private RestAssert withClient(UnaryOperator<OkHttpClient.Builder> configure) {
     return new RestAssert(url, client -> configure.apply(configureClient.apply(client)), configureRequest);
   }
 
@@ -73,16 +73,11 @@ public class RestAssert {
       AtomicInteger tries = new AtomicInteger(0);
 
       @Override
-      public Request authenticate(Proxy proxy, com.squareup.okhttp.Response response) {
+      public Request authenticate(Route route, okhttp3.Response response) throws IOException {
         if (tries.getAndIncrement() > 0) {
           return null;
         }
         return addBasicAuthHeader(login, password).apply(response.request().newBuilder()).build();
-      }
-
-      @Override
-      public Request authenticateProxy(Proxy proxy, com.squareup.okhttp.Response response) {
-        return null;
       }
     }));
   }
@@ -97,8 +92,8 @@ public class RestAssert {
   }
 
   // Client modification
-  private static UnaryOperator<OkHttpClient> setAuthenticator(Authenticator authenticator) {
-    return client -> client.setAuthenticator(authenticator);
+  private static UnaryOperator<OkHttpClient.Builder> setAuthenticator(Authenticator authenticator) {
+    return client -> client.authenticator(authenticator);
   }
 
   // Call
