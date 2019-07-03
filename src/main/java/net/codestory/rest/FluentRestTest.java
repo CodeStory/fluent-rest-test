@@ -16,7 +16,9 @@
 package net.codestory.rest;
 
 import net.codestory.rest.misc.PostBody;
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public interface FluentRestTest {
   int port();
@@ -51,6 +53,10 @@ public interface FluentRestTest {
 
   default RestAssert post(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
     return get(path).withRequest(request -> request.post(PostBody.form(firstParameterName, firstParameterValue, parameterNameValuePairs)));
+  }
+
+  default RestAssert postRaw(String path, String contentType, String content) {
+    return get(path).withRequest(request -> request.post(RequestBody.create(MediaType.parse(contentType), content)));
   }
 
   // PUT

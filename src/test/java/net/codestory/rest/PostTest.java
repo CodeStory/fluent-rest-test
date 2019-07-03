@@ -47,4 +47,16 @@ public class PostTest extends AbstractTest {
 
     post("/", "key1", "1st", "key2", "2nd").should().respond(201).contain("1st&2nd");
   }
+
+  @Test
+  public void post_multipart_raw_one_part() {
+    configure(routes -> routes
+        .post("/", context -> new Payload("text/plain", "parts=" + context.parts().size(), 200))
+    );
+    postRaw("/", "multipart/form-data; boundary=boundary", "--boundary\r\n" +
+            "Content-Disposition: form-data; name=\"field\"\r\n" +
+            "\r\n" +
+            "value\r\n" +
+            "--boundary--").should().respond(200).contain("parts=1");
+  }
 }
