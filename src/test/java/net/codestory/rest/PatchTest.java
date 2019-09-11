@@ -15,36 +15,33 @@
  */
 package net.codestory.rest;
 
-import net.codestory.http.payload.Payload;
-import org.junit.Test;
-
 public class PatchTest extends AbstractTest {
-  @Test
-  public void patch_empty() {
-    configure(routes -> routes
-        .patch("/", () -> Payload.created())
-    );
-
-    patch("/").should()
-      .respond(201)
-      .contain("");
-  }
-
-  @Test
-  public void patch_body() {
-    configure(routes -> routes
-        .patch("/", context -> new Payload("text/plain", context.request().content(), 201))
-    );
-
-    patch("/", "<body>").should().respond(201).contain("<body>");
-  }
-
-  @Test
-  public void patch_form() {
-    configure(routes -> routes
-        .patch("/", context -> new Payload("text/plain", context.get("key1") + "&" + context.get("key2"), 201))
-    );
-
-    patch("/", "key1", "1st", "key2", "2nd").should().respond(201).contain("1st&2nd");
-  }
+//  @Test
+//  public void patch_empty() {
+//    configure(routes -> routes
+//        .patch("/", () -> Payload.created())
+//    );
+//
+//    patch("/").should()
+//      .respond(201)
+//      .contain("");
+//  }
+//
+//  @Test
+//  public void patch_body() {
+//    configure(routes -> routes
+//        .patch("/", context -> new Payload("text/plain", context.request().content(), 201))
+//    );
+//
+//    patch("/", "<body>").should().respond(201).contain("<body>");
+//  }
+//
+//  @Test
+//  public void patch_form() {
+//    configure(routes -> routes
+//        .patch("/", context -> new Payload("text/plain", context.get("key1") + "&" + context.get("key2"), 201))
+//    );
+//
+//    patch("/", "key1", "1st", "key2", "2nd").should().respond(201).contain("1st&2nd");
+//  }
 }
