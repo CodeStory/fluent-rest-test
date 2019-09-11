@@ -1,5 +1,6 @@
 .idea/
 *.iml
+*.iws
 target/
 pom.xml.releaseBackup
 release.properties
