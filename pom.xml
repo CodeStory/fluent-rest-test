@@ -4,7 +4,7 @@
 
   <groupId>net.code-story</groupId>
   <artifactId>fluent-rest-test</artifactId>
-  <version>1.7</version>
+  <version>1.8-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Fluent-Rest-Test</name>
@@ -22,7 +22,7 @@
     <connection>scm:git:git@github.com:CodeStory/fluent-rest-test.git</connection>
     <url>scm:git:git@github.com:CodeStory/fluent-rest-test.git</url>
     <developerConnection>scm:git:git@github.com:CodeStory/fluent-rest-test.git</developerConnection>
-    <tag>fluent-rest-test-1.7</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <licenses>
