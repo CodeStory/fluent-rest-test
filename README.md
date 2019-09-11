@@ -18,7 +18,7 @@ Release versions are deployed on Maven Central:
 <dependency>
   <groupId>net.code-story</groupId>
   <artifactId>fluent-rest-test</artifactId>
-  <version>1.6</version>
+  <version>1.7</version>
 </dependency>
 ```
 
