@@ -17,7 +17,6 @@ package net.codestory.rest;
 
 import net.codestory.rest.misc.PostBody;
 import okhttp3.MediaType;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public interface FluentRestTest {
@@ -34,12 +33,12 @@ public interface FluentRestTest {
 
   // DELETE
   default RestAssert delete(String path) {
-    return get(path).withRequest(Request.Builder::delete);
+    return get(path).withRequest(request -> request.delete());
   }
 
   // HEAD
   default RestAssert head(String path) {
-    return get(path).withRequest(Request.Builder::head);
+    return get(path).withRequest(request -> request.head());
   }
 
   // POST
@@ -76,4 +75,18 @@ public interface FluentRestTest {
   default RestAssert options(String path) {
     return get(path).withRequest(request -> request.method("OPTIONS", null));
   }
+
+  // PATCH
+  default RestAssert patch(String path) {
+    return get(path).withRequest(request -> request.patch(PostBody.empty()));
+  }
+
+  default RestAssert patch(String path, String body) {
+    return get(path).withRequest(request -> request.patch(PostBody.json(body)));
+  }
+
+  default RestAssert patch(String path, String firstParameterName, Object firstParameterValue, Object... parameterNameValuePairs) {
+    return get(path).withRequest(request -> request.patch(PostBody.form(firstParameterName, firstParameterValue, parameterNameValuePairs)));
+  }
+
 }
