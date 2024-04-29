@@ -53,7 +53,7 @@ public class RestAssert {
   public Response response() {
     try {
       RestResponse call = call();
-      return new Response(call.contentType(), call.bodyAsString(), call.code());
+      return new Response(call.contentType(), call.bodyAsString(), call.code(), call.headers());
     } catch (IOException e) {
       throw new RuntimeException("Unable to query: " + url, e);
     }

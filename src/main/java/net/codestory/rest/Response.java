@@ -15,15 +15,25 @@
  */
 package net.codestory.rest;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Response {
 	private final String contentType;
 	private final String content;
 	private final int code;
+	private final Map<String, List<String>> headers;
 
 	public Response(String contentType, String content, int code) {
+		this(contentType, content, code, new HashMap<>());
+	}
+
+	public Response(String contentType, String content, int code, Map<String, List<String>> headers) {
 		this.contentType = contentType;
 		this.content = content;
 		this.code = code;
+		this.headers = headers;
 	}
 
 	public String contentType() {
@@ -36,5 +46,9 @@ public class Response {
 
 	public int code() {
 		return code;
+	}
+
+	public List<String> header(String headerName) {
+		return headers.get(headerName);
 	}
 }

@@ -67,6 +67,7 @@ class RestResponse {
   public String header(String name) {
     return response.header(name);
   }
+  public Map<String, List<String>> headers() {return response.headers().toMultimap();}
 
   public String cookie(String name) {
     List<Cookie> cookies = cookieJar.map.values().stream().flatMap(List::stream).collect(Collectors.toList());
