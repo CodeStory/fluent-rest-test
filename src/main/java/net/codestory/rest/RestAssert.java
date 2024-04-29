@@ -109,4 +109,12 @@ public class RestAssert {
   private static UnaryOperator<Request.Builder> addHeader(String name, String value) {
     return request -> request.addHeader(name, value);
   }
+
+  public RestAssert withFollowRedirect(boolean b) {
+      return withClient(setFollowRedirect(b));
+  }
+
+  private static UnaryOperator<OkHttpClient.Builder> setFollowRedirect(boolean followRedirect) {
+    return client -> client.followRedirects(followRedirect);
+  }
 }

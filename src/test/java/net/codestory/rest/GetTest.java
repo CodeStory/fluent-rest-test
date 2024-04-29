@@ -216,4 +216,14 @@ public class GetTest extends AbstractTest {
     assertThat(response.header("foo")).isEqualTo(Collections.singletonList("bar"));
     assertThat(response.header("baz")).isEqualTo(Collections.singletonList("qux"));
   }
+
+  @Test
+  public void get_response_with_follow_redirect_false() {
+    configure(routes -> routes
+        .get("/", (context) -> Payload.temporaryRedirect("http://foo.bar"))
+    );
+    Response response = get("/").withFollowRedirect(false).response();
+    assertThat(response.code()).isEqualTo(307);
+    assertThat(response.header("Location")).isEqualTo(Collections.singletonList("http://foo.bar"));
+  }
 }
