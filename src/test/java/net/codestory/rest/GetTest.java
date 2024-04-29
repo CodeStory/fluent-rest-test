@@ -19,6 +19,8 @@ import net.codestory.http.filters.basic.BasicAuthFilter;
 import net.codestory.http.payload.Payload;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static net.codestory.http.security.Users.singleUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -198,5 +200,20 @@ public class GetTest extends AbstractTest {
     assertThat(response.contentType()).isEqualTo("text/html;charset=UTF-8");
     assertThat(response.content()).isEqualTo("Hello");
     assertThat(response.code()).isEqualTo(200);
+  }
+
+  @Test
+  public void get_response_with_headers() {
+    configure(routes -> routes
+        .get("/", (context) -> {
+          context.response().setHeader("foo", "bar");
+          context.response().setHeader("baz", "qux");
+          return "Hello foo";
+        })
+    );
+    Response response = get("/").response();
+    assertThat(response.content()).isEqualTo("Hello foo");
+    assertThat(response.header("foo")).isEqualTo(Collections.singletonList("bar"));
+    assertThat(response.header("baz")).isEqualTo(Collections.singletonList("qux"));
   }
 }
