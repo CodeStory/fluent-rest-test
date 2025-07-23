@@ -40,11 +40,11 @@ public class RestAssert {
   }
 
   // Creation
-  RestAssert withRequest(UnaryOperator<Request.Builder> configure) {
+  public RestAssert withRequest(UnaryOperator<Request.Builder> configure) {
     return new RestAssert(url, configureClient, request -> configure.apply(configureRequest.apply(request)));
   }
 
-  private RestAssert withClient(UnaryOperator<OkHttpClient.Builder> configure) {
+  public RestAssert withClient(UnaryOperator<OkHttpClient.Builder> configure) {
     return new RestAssert(url, client -> configure.apply(configureClient.apply(client)), configureRequest);
   }
 
