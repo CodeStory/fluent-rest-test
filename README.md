@@ -4,7 +4,7 @@ Unit-test Rest applications.
 
 # Build status
 
-[![Build Status](https://api.travis-ci.org/CodeStory/fluent-rest-test.png)](https://travis-ci.org/CodeStory/fluent-rest-test)
+[![Java CI with Maven](https://github.com/CodeStory/fluent-rest-test/actions/workflows/maven.yml/badge.svg)](https://github.com/CodeStory/fluent-rest-test/actions/workflows/maven.yml)
 
 # Environment
 
